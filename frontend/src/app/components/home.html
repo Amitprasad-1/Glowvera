@@ -1,0 +1,98 @@
+<div class="home-container animate-fade-in">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <span class="hero-tag">WELCOME TO GLOWVERA</span>
+      <h1 class="hero-title">Confidence. Your Best Look.</h1>
+      <p class="hero-desc">
+        Experience premium, personalized unisex grooming and relaxing spa therapy. 
+        Designed by experts, tailored specifically for you.
+      </p>
+      <div class="hero-actions">
+        <a routerLink="/booking" class="btn btn-primary">Book Appointment</a>
+        <a href="#services-preview" class="btn btn-secondary">Explore Services</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Unisex Categories Showcase -->
+  <section class="categories-showcase container">
+    <h2 class="section-title">Luxury Styling & Care</h2>
+    <div class="categories-grid">
+      <div class="category-card hair">
+        <div class="category-icon">✂️</div>
+        <h3>Hair Care</h3>
+        <p>Unisex cuts, premium color design, deep hair spa treatments, and professional blowouts.</p>
+      </div>
+      <div class="category-card beard">
+        <div class="category-icon">💈</div>
+        <h3>Grooming & Shaves</h3>
+        <p>Razor lining, hot towel shave treatments, and beard grooming using luxury oils.</p>
+      </div>
+      <div class="category-card skin">
+        <div class="category-icon">🧴</div>
+        <h3>Skin Care</h3>
+        <p>Charcoal deep cleaning facials and luxury anti-aging treatments for natural glow.</p>
+      </div>
+      <div class="category-card spa">
+        <div class="category-icon">💆</div>
+        <h3>Spa & Massages</h3>
+        <p>Swedish deep tissue therapy and relaxing hot stone sessions to rejuvenate your senses.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services & Pricing Preview -->
+  <section id="services-preview" class="services-preview-section">
+    <div class="container">
+      <div class="services-header">
+        <h2 class="section-title">Our Service Catalog</h2>
+        <div class="category-tabs">
+          <button 
+            *ngFor="let cat of categories" 
+            (click)="selectCategory(cat.id)"
+            [class.active]="selectedCategoryId === cat.id"
+            class="tab-btn">
+            {{ cat.name }}
+          </button>
+        </div>
+      </div>
+
+      <div class="pricing-grid">
+        <div *ngFor="let service of filteredServices" class="pricing-card card">
+          <div class="pricing-info">
+            <h4 class="service-name">{{ service.name }}</h4>
+            <span class="service-duration">⏱️ {{ service.durationMinutes }} mins</span>
+          </div>
+          <div class="pricing-action">
+            <span class="service-price">${{ service.price }}</span>
+            <button (click)="addToBooking(service)" class="btn btn-primary btn-sm">Add to Book</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stylists Grid -->
+  <section class="stylists-section container">
+    <h2 class="section-title">Meet Our Master Stylists</h2>
+    <p class="section-subtitle">Our certified experts are ready to curate your next style transformation</p>
+    
+    <div class="stylists-grid">
+      <div *ngFor="let stylist of stylists" class="stylist-card card">
+        <div class="stylist-avatar">
+          <div class="avatar-placeholder">{{ stylist.name.charAt(0) }}</div>
+        </div>
+        <h3 class="stylist-name">{{ stylist.name }}</h3>
+        <div class="stylist-schedule">
+          <span>📅 Shift: {{ formatTime(stylist.workingStart) }} - {{ formatTime(stylist.workingEnd) }}</span>
+          <span>☕ Break: {{ formatTime(stylist.breakStart) }} - {{ formatTime(stylist.breakEnd) }}</span>
+        </div>
+        <div class="stylist-skills">
+          <span *ngFor="let skill of stylist.services" class="skill-badge">{{ skill.name }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

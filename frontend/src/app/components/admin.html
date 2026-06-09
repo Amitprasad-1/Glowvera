@@ -1,0 +1,256 @@
+<div class="admin-container container animate-fade-in">
+  <h2 class="admin-title title-with-gold">Admin Operations Panel</h2>
+
+  <!-- Top Tab Selector -->
+  <div class="admin-tabs-row">
+    <button (click)="activeTab = 'timeline'" [class.active]="activeTab === 'timeline'" class="admin-tab-btn">
+      📅 Booking Timeline
+    </button>
+    <button (click)="activeTab = 'stylists'" [class.active]="activeTab === 'stylists'" class="admin-tab-btn">
+      ✂️ Manage Stylists
+    </button>
+    <button (click)="activeTab = 'services'" [class.active]="activeTab === 'services'" class="admin-tab-btn">
+      🧼 Manage Services
+    </button>
+    <button (click)="activeTab = 'reminders'" [class.active]="activeTab === 'reminders'" class="admin-tab-btn">
+      🔔 Test Reminders (Cron)
+    </button>
+  </div>
+
+  <!-- Content 1: Booking Timeline Grid -->
+  <div *ngIf="activeTab === 'timeline'" class="timeline-tab animate-fade-in">
+    <div class="timeline-filters form-group">
+      <label>Choose Date for Timeline View</label>
+      <input type="date" [(ngModel)]="timelineDate" (change)="loadTimelineData()" class="form-control max-w-300">
+    </div>
+
+    <!-- Timeline Grid Layout -->
+    <div class="timeline-grid-wrapper glass">
+      <div class="timeline-header-row">
+        <div class="time-col-header">Hour</div>
+        <div *ngFor="let s of stylists" class="stylist-col-header">
+          <strong>{{ s.name }}</strong>
+          <span class="header-hours">{{ formatTime(s.workingStart) }} - {{ formatTime(s.workingEnd) }}</span>
+        </div>
+      </div>
+
+      <div class="timeline-body">
+        <div *ngFor="let hour of hourlyTrack" class="timeline-row">
+          <div class="time-cell">{{ hour }}</div>
+          
+          <!-- Stylist cells -->
+          <div *ngFor="let s of stylists" class="stylist-cell">
+            <!-- Check if hour falls inside working hours -->
+            <div *ngIf="isOutsideWorkingHours(s, hour)" class="cell-block blocked-outside">
+              Off Duty
+            </div>
+            
+            <!-- Check if hour falls inside break hours -->
+            <div *ngIf="!isOutsideWorkingHours(s, hour) && isBreakTime(s, hour)" class="cell-block blocked-break">
+              Break Time
+            </div>
+
+            <!-- Display active appointments overlapping this hour -->
+            <div *ngFor="let appt of getAppointmentsForHour(s.id, hour)" 
+                 (click)="onViewAppointment(appt)"
+                 class="cell-block booking-block animate-fade-in">
+              <span class="booking-client">{{ appt.user.name }}</span>
+              <span class="booking-service">{{ getServicesSummary(appt) }}</span>
+              <span class="booking-time">{{ formatTimeOnly(appt.startTime) }} - {{ formatTimeOnly(appt.endTime) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Appointment Modal Info Details -->
+    <div *ngIf="selectedAppointment" class="modal-overlay animate-fade-in">
+      <div class="modal-card glass">
+        <h3>Appointment #{{ selectedAppointment.id }}</h3>
+        <hr class="modal-hr">
+        <div class="modal-body">
+          <p><strong>Client:</strong> {{ selectedAppointment.user.name }} ({{ selectedAppointment.user.email }})</p>
+          <p><strong>Stylist:</strong> {{ selectedAppointment.stylist.name }}</p>
+          <p><strong>Scheduled Time:</strong> {{ formatDateTime(selectedAppointment.startTime) }} to {{ formatDateTime(selectedAppointment.endTime) }}</p>
+          <p><strong>Total Pricing:</strong> ${{ selectedAppointment.totalPrice }}</p>
+          <p><strong>Status:</strong> <span class="badge badge-confirmed">{{ selectedAppointment.status }}</span></p>
+        </div>
+        <div class="modal-actions">
+          <button (click)="cancelAppointment(selectedAppointment.id)" class="btn btn-danger btn-sm">Cancel Booking</button>
+          <button (click)="selectedAppointment = null" class="btn btn-secondary btn-sm">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content 2: Manage Stylists -->
+  <div *ngIf="activeTab === 'stylists'" class="crud-tab animate-fade-in">
+    <div class="crud-layout">
+      <!-- Roster List -->
+      <div class="list-panel card">
+        <h3>Stylists Roster</h3>
+        <div class="items-list">
+          <div *ngFor="let s of stylists" class="item-list-row">
+            <div>
+              <strong>{{ s.name }}</strong>
+              <span class="schedule-sub">{{ formatTime(s.workingStart) }} - {{ formatTime(s.workingEnd) }} &bull; Break: {{ formatTime(s.breakStart) }}</span>
+            </div>
+            <div class="row-actions">
+              <button (click)="onEditStylist(s)" class="btn btn-secondary btn-sm">Edit</button>
+              <button (click)="deleteStylist(s.id)" class="btn btn-danger btn-sm">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Editor Form -->
+      <div class="form-panel card">
+        <h3>{{ stylistForm.id ? 'Edit Stylist' : 'Add New Stylist' }}</h3>
+        <form (ngSubmit)="saveStylist()">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" [(ngModel)]="stylistForm.name" name="name" required class="form-control">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col">
+              <label>Shift Starts</label>
+              <input type="time" [(ngModel)]="stylistForm.workingStart" name="workingStart" required class="form-control">
+            </div>
+            <div class="form-group col">
+              <label>Shift Ends</label>
+              <input type="time" [(ngModel)]="stylistForm.workingEnd" name="workingEnd" required class="form-control">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col">
+              <label>Break Starts</label>
+              <input type="time" [(ngModel)]="stylistForm.breakStart" name="breakStart" required class="form-control">
+            </div>
+            <div class="form-group col">
+              <label>Break Ends</label>
+              <input type="time" [(ngModel)]="stylistForm.breakEnd" name="breakEnd" required class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Qualified Service Skills</label>
+            <div class="checkbox-grid">
+              <label *ngFor="let s of allServicesList" class="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  [checked]="isStylistQualifiedFor(s.id)"
+                  (change)="toggleStylistServiceSkill(s.id)">
+                {{ s.name }} (${{ s.price }})
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="stylistForm.isActive" name="isActive">
+              Active Operational Status
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-sm">Save Stylist</button>
+            <button type="button" (click)="resetStylistForm()" class="btn btn-secondary btn-sm">Reset</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content 3: Manage Services -->
+  <div *ngIf="activeTab === 'services'" class="crud-tab animate-fade-in">
+    <div class="crud-layout">
+      <!-- Services List Paged -->
+      <div class="list-panel card">
+        <h3>Service Catalog</h3>
+        <div class="items-list">
+          <div *ngFor="let s of servicesPage?.content" class="item-list-row">
+            <div>
+              <strong>{{ s.name }}</strong>
+              <span class="schedule-sub">${{ s.price }} &bull; {{ s.durationMinutes }} mins &bull; [{{ s.category.name }}]</span>
+            </div>
+            <div class="row-actions">
+              <button (click)="onEditService(s)" class="btn btn-secondary btn-sm">Edit</button>
+              <button (click)="deleteService(s.id)" class="btn btn-danger btn-sm">Delete</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Pagination controls -->
+        <div class="pagination-row">
+          <button [disabled]="currentPage === 0" (click)="loadServicesPage(currentPage - 1)" class="btn btn-secondary btn-sm">< Prev</button>
+          <span>Page {{ currentPage + 1 }} of {{ servicesPage?.totalPages || 1 }}</span>
+          <button [disabled]="servicesPage?.last" (click)="loadServicesPage(currentPage + 1)" class="btn btn-secondary btn-sm">Next ></button>
+        </div>
+      </div>
+
+      <!-- Editor Form -->
+      <div class="form-panel card">
+        <h3>{{ serviceForm.id ? 'Edit Service' : 'Add New Service' }}</h3>
+        <form (ngSubmit)="saveService()">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" [(ngModel)]="serviceForm.name" name="name" required class="form-control">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col">
+              <label>Price ($)</label>
+              <input type="number" [(ngModel)]="serviceForm.price" name="price" required class="form-control">
+            </div>
+            <div class="form-group col">
+              <label>Duration (Minutes)</label>
+              <input type="number" [(ngModel)]="serviceForm.durationMinutes" name="durationMinutes" required class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Category</label>
+            <select [(ngModel)]="serviceForm.categoryId" name="categoryId" required class="form-control">
+              <option [value]="null" disabled selected>-- Select Category --</option>
+              <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+            </select>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-sm">Save Service</button>
+            <button type="button" (click)="resetServiceForm()" class="btn btn-secondary btn-sm">Reset</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content 4: Test Reminders -->
+  <div *ngIf="activeTab === 'reminders'" class="reminders-tab card animate-fade-in">
+    <h3>Trigger Automated Reminder Notification Runs</h3>
+    <p class="section-meta-text">Simulates the daily 8:00 AM Cron job by scanning appointments for the chosen date and writing mock notifications to console simulation logs.</p>
+    
+    <div class="reminder-trigger-box">
+      <div class="form-group max-w-300">
+        <label>Trigger Date (Default Tomorrow)</label>
+        <input type="date" [(ngModel)]="reminderDate" class="form-control">
+      </div>
+      <button (click)="triggerReminders()" [disabled]="triggeringReminders" class="btn btn-primary">
+        {{ triggeringReminders ? 'Running Simulation...' : 'Trigger SMS & Email Reminders' }}
+      </button>
+    </div>
+
+    <!-- Result Log window -->
+    <div *ngIf="reminderResult" class="reminder-result glass animate-fade-up">
+      <h4>Simulation Summary</h4>
+      <p><strong>Target Date:</strong> {{ reminderResult.date }}</p>
+      <p><strong>Notifications Sent:</strong> {{ reminderResult.remindersSent }} client alert(s)</p>
+      <div class="alert alert-success mt-16 font-sm-alert">
+        {{ reminderResult.message }}
+      </div>
+      <small class="reminder-note">* View Spring Boot console logs to inspect detailed simulated SMS and Email logs.</small>
+    </div>
+  </div>
+</div>

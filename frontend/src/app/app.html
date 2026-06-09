@@ -1,0 +1,34 @@
+<header class="navbar glass">
+  <div class="navbar-container">
+    <a routerLink="/home" class="logo">
+      <span><span class="gold-text">GLOW</span>VERA</span>
+      <span class="sub-logo">UNISEX SALON</span>
+    </a>
+    <nav class="nav-links">
+      <a routerLink="/home" routerLinkActive="active" class="nav-link">Home</a>
+      <a routerLink="/booking" routerLinkActive="active" class="nav-link">Book Now</a>
+      
+      @if (auth.isAdmin()) {
+        <a routerLink="/admin" routerLinkActive="active" class="nav-link admin-link">Admin Dashboard</a>
+      }
+      
+      @if (auth.isAuthenticated()) {
+        <span class="user-greeting">Hello, {{ auth.currentUserSignal()?.name }}</span>
+        <button (click)="logout()" class="btn btn-secondary btn-sm">Logout</button>
+      } @else {
+        <a routerLink="/auth" class="btn btn-primary btn-sm">Sign In</a>
+      }
+    </nav>
+  </div>
+</header>
+
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="footer">
+  <div class="footer-container">
+    <p>&copy; 2026 GLOWVERA Unisex Salon & Spa. Confidence. Your Best Look.</p>
+    <p class="footer-sub">Premium Full-Stack Slot Scheduling Platform</p>
+  </div>
+</footer>

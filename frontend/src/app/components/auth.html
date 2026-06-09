@@ -1,0 +1,105 @@
+<div class="auth-wrapper animate-fade-in">
+  <div class="auth-card glass">
+    <!-- Tab Toggles -->
+    <div class="auth-tabs">
+      <button 
+        (click)="isLoginMode = true"
+        [class.active]="isLoginMode"
+        class="auth-tab-btn">
+        Login
+      </button>
+      <button 
+        (click)="isLoginMode = false"
+        [class.active]="!isLoginMode"
+        class="auth-tab-btn">
+        Sign Up
+      </button>
+    </div>
+
+    <!-- Error/Success Alerts -->
+    <div *ngIf="errorMessage" class="alert alert-error animate-fade-in">
+      <span>⚠️ {{ errorMessage }}</span>
+    </div>
+    <div *ngIf="successMessage" class="alert alert-success animate-fade-in">
+      <span>✅ {{ successMessage }}</span>
+    </div>
+
+    <!-- Login Form -->
+    <form *ngIf="isLoginMode" (ngSubmit)="onLogin()" class="auth-form">
+      <h2 class="form-title">Welcome Back</h2>
+      <p class="form-subtitle">Enter your details to access your booking schedule</p>
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <input 
+          type="email" 
+          name="email" 
+          [(ngModel)]="loginData.email" 
+          required 
+          class="form-control" 
+          placeholder="name@example.com">
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input 
+          type="password" 
+          name="password" 
+          [(ngModel)]="loginData.password" 
+          required 
+          class="form-control" 
+          placeholder="••••••••">
+      </div>
+
+      <button type="submit" [disabled]="!loginData.email || !loginData.password" class="btn btn-primary w-100">
+        Sign In
+      </button>
+    </form>
+
+    <!-- Register Form -->
+    <form *ngIf="!isLoginMode" (ngSubmit)="onRegister()" class="auth-form">
+      <h2 class="form-title">Create Account</h2>
+      <p class="form-subtitle">Join Glowvera to track appointments and book online</p>
+
+      <div class="form-group">
+        <label>Full Name</label>
+        <input 
+          type="text" 
+          name="name" 
+          [(ngModel)]="registerData.name" 
+          required 
+          class="form-control" 
+          placeholder="John Doe">
+      </div>
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <input 
+          type="email" 
+          name="email" 
+          [(ngModel)]="registerData.email" 
+          required 
+          class="form-control" 
+          placeholder="name@example.com">
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input 
+          type="password" 
+          name="password" 
+          [(ngModel)]="registerData.password" 
+          required 
+          class="form-control" 
+          placeholder="At least 6 characters">
+      </div>
+
+      <button 
+        type="submit" 
+        [disabled]="!registerData.name || !registerData.email || registerData.password.length < 6" 
+        class="btn btn-primary w-100">
+        Create Account
+      </button>
+    </form>
+  </div>
+</div>

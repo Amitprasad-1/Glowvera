@@ -1,0 +1,23 @@
+# Dependency directories
+node_modules/
+/frontend/node_modules/
+
+# Angular build and cache
+.angular/
+/frontend/.angular/
+dist/
+/frontend/dist/
+
+# Maven build outputs
+/backend/target/
+*.class
+
+# Log files and temporary holds
+*.log
+backend/email_logs.txt
+
+# OS and IDE configuration
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store

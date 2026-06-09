@@ -1,0 +1,12 @@
+{
+  "name": "glowvera-salon-saas",
+  "version": "1.0.0",
+  "description": "Full-Stack Glowvera Unisex Salon & Spa Platform",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run start --prefix frontend\" \"cd backend && .\\mvnw.cmd spring-boot:run\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
