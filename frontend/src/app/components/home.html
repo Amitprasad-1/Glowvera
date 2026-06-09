@@ -1,61 +1,111 @@
 <div class="home-container animate-fade-in">
   <!-- Hero Section -->
   <section class="hero-section">
+    <!-- Ambient Aurora Blobs -->
+    <div class="aurora-container">
+      <div class="aurora-gold" style="top: -100px; right: -50px;"></div>
+      <div class="aurora-purple" style="top: 150px; left: -100px;"></div>
+    </div>
+    
     <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <span class="hero-tag">WELCOME TO GLOWVERA</span>
-      <h1 class="hero-title">Confidence. Your Best Look.</h1>
-      <p class="hero-desc">
-        Experience premium, personalized unisex grooming and relaxing spa therapy. 
-        Designed by experts, tailored specifically for you.
-      </p>
-      <div class="hero-actions">
-        <a routerLink="/booking" class="btn btn-primary">Book Appointment</a>
-        <a href="#services-preview" class="btn btn-secondary">Explore Services</a>
+    <div class="hero-gridcontainer container">
+      <div class="hero-content animate-fade-up">
+        <div class="hero-tag-badge">
+          <span class="badge-icon">⚡</span>
+          <span class="badge-text">PREMIER LUXURY UNISEX SALON</span>
+        </div>
+        <h1 class="hero-title">REDEFINE YOUR <br><span class="gold-text">GLOW & STYLE</span></h1>
+        <p class="hero-desc">
+          Experience premium, personalized unisex grooming and relaxing spa therapy. 
+          Designed by experts, tailored specifically for you.
+        </p>
+        <div class="hero-actions">
+          <a routerLink="/booking" class="btn btn-primary">Book Appointment Now</a>
+          <a href="#services-preview" class="btn btn-secondary">Explore Services</a>
+        </div>
+      </div>
+      
+      <!-- Premium Hero Media Asset Column -->
+      <div class="hero-media-col animate-fade-in">
+        <div class="hero-image-frame">
+          <div class="hero-glow-ring"></div>
+          <div class="hero-image-wrapper">
+            <img src="/glowvera_logo.png" alt="Glowvera Unisex Salon Logo" class="hero-main-img">
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Unisex Categories Showcase -->
   <section class="categories-showcase container">
-    <h2 class="section-title">Luxury Styling & Care</h2>
-    <div class="categories-grid">
-      <div class="category-card hair">
-        <div class="category-icon">✂️</div>
+    <div class="section-header">
+      <span class="section-tag-small">Luxury Services</span>
+      <h2 class="section-title">Luxury Styling & Care</h2>
+    </div>
+    
+    <!-- categories-grid behaves as scroll-x-container on mobile, grid on desktop -->
+    <div class="categories-grid scroll-x-container">
+      <div class="category-card hair scroll-x-item">
+        <div class="category-icon-wrapper">
+          <span class="cat-icon">✂️</span>
+        </div>
         <h3>Hair Care</h3>
         <p>Unisex cuts, premium color design, deep hair spa treatments, and professional blowouts.</p>
+        <div class="cat-hover-bar"></div>
       </div>
-      <div class="category-card beard">
-        <div class="category-icon">💈</div>
+      
+      <div class="category-card beard scroll-x-item">
+        <div class="category-icon-wrapper">
+          <span class="cat-icon">💈</span>
+        </div>
         <h3>Grooming & Shaves</h3>
         <p>Razor lining, hot towel shave treatments, and beard grooming using luxury oils.</p>
+        <div class="cat-hover-bar"></div>
       </div>
-      <div class="category-card skin">
-        <div class="category-icon">🧴</div>
+      
+      <div class="category-card skin scroll-x-item">
+        <div class="category-icon-wrapper">
+          <span class="cat-icon">🧴</span>
+        </div>
         <h3>Skin Care</h3>
         <p>Charcoal deep cleaning facials and luxury anti-aging treatments for natural glow.</p>
+        <div class="cat-hover-bar"></div>
       </div>
-      <div class="category-card spa">
-        <div class="category-icon">💆</div>
+      
+      <div class="category-card spa scroll-x-item">
+        <div class="category-icon-wrapper">
+          <span class="cat-icon">💆</span>
+        </div>
         <h3>Spa & Massages</h3>
         <p>Swedish deep tissue therapy and relaxing hot stone sessions to rejuvenate your senses.</p>
+        <div class="cat-hover-bar"></div>
       </div>
     </div>
   </section>
 
   <!-- Services & Pricing Preview -->
   <section id="services-preview" class="services-preview-section">
+    <!-- Ambient Aurora Blobs -->
+    <div class="aurora-container">
+      <div class="aurora-purple" style="bottom: -100px; right: -50px;"></div>
+    </div>
+
     <div class="container">
       <div class="services-header">
+        <span class="section-tag-small">Menu & Pricing</span>
         <h2 class="section-title">Our Service Catalog</h2>
-        <div class="category-tabs">
-          <button 
-            *ngFor="let cat of categories" 
-            (click)="selectCategory(cat.id)"
-            [class.active]="selectedCategoryId === cat.id"
-            class="tab-btn">
-            {{ cat.name }}
-          </button>
+        
+        <div class="category-tabs-container">
+          <div class="category-tabs">
+            <button 
+              *ngFor="let cat of categories" 
+              (click)="selectCategory(cat.id)"
+              [class.active]="selectedCategoryId === cat.id"
+              class="tab-btn">
+              {{ cat.name }}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -76,13 +126,25 @@
 
   <!-- Stylists Grid -->
   <section class="stylists-section container">
-    <h2 class="section-title">Meet Our Master Stylists</h2>
-    <p class="section-subtitle">Our certified experts are ready to curate your next style transformation</p>
+    <!-- Ambient Aurora Blobs -->
+    <div class="aurora-container">
+      <div class="aurora-gold" style="top: 50px; left: -100px;"></div>
+    </div>
+
+    <div class="section-header">
+      <span class="section-tag-small">Expert Team</span>
+      <h2 class="section-title">Meet Our Master Stylists</h2>
+      <p class="section-subtitle">Our certified experts are ready to curate your next style transformation</p>
+    </div>
     
-    <div class="stylists-grid">
-      <div *ngFor="let stylist of stylists" class="stylist-card card">
-        <div class="stylist-avatar">
-          <div class="avatar-placeholder">{{ stylist.name.charAt(0) }}</div>
+    <!-- stylists-grid behaves as scroll-x-container on mobile, grid on desktop -->
+    <div class="stylists-grid scroll-x-container">
+      <div *ngFor="let stylist of stylists" class="stylist-card card scroll-x-item">
+        <div class="stylist-avatar-container">
+          <div class="avatar-ring-glow"></div>
+          <div class="stylist-avatar">
+            <div class="avatar-placeholder">{{ stylist.name.charAt(0) }}</div>
+          </div>
         </div>
         <h3 class="stylist-name">{{ stylist.name }}</h3>
         <div class="stylist-schedule">

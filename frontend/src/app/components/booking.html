@@ -1,20 +1,22 @@
 <div class="booking-container container animate-fade-in">
   <div class="booking-grid">
     <!-- Left Side: Service Catalog Selection -->
-    <div class="catalog-section">
-      <h2 class="title-with-gold">Select Services</h2>
-      <div class="category-tabs-vertical">
+    <div class="catalog-section card">
+      <h2 class="title-with-gold"><span class="gold-text">Select</span> Services</h2>
+      
+      <!-- horizontal-swipe scroll container on mobile, flex row on desktop -->
+      <div class="category-tabs-vertical scroll-x-container">
         <button 
           *ngFor="let cat of categories" 
           (click)="selectCategory(cat.id)"
           [class.active]="selectedCategoryId === cat.id"
-          class="cat-vertical-btn">
+          class="cat-vertical-btn scroll-x-item">
           {{ cat.name }}
         </button>
       </div>
 
       <div class="services-list-grid">
-        <div *ngFor="let service of categoryServices" class="service-item-card glass">
+        <div *ngFor="let service of categoryServices" class="service-item-card glass animate-fade-up">
           <div class="service-header-row">
             <h4>{{ service.name }}</h4>
             <span class="service-price">${{ service.price }}</span>
@@ -24,7 +26,7 @@
             (click)="addServiceToCart(service)" 
             [disabled]="isServiceInCart(service.id)"
             class="btn btn-primary btn-sm btn-service-add">
-            {{ isServiceInCart(service.id) ? 'Added' : 'Add to Booking' }}
+            {{ isServiceInCart(service.id) ? '✓ Selected' : 'Add to Booking' }}
           </button>
         </div>
       </div>
@@ -33,25 +35,26 @@
     <!-- Right Side: Booking Cart, Filters, & Slot Grid -->
     <div class="checkout-section">
       <!-- Success View -->
-      <div *ngIf="bookingSuccess" class="success-booking-card glass animate-fade-up">
+      <div *ngIf="bookingSuccess" class="success-booking-card card animate-fade-up">
         <div class="success-icon">✨</div>
         <h3>Booking Confirmed!</h3>
         <p>Thank you for choosing Glowvera Salon.</p>
         <div class="success-details">
-          <p><strong>Appointment ID:</strong> #{{ confirmedAppointment?.id }}</p>
+          <p><strong>Appointment ID:</strong> <span class="gold-text">#{{ confirmedAppointment?.id }}</span></p>
           <p><strong>Stylist:</strong> {{ confirmedAppointment?.stylist?.name }}</p>
-          <p><strong>Time:</strong> {{ formatDateTime(confirmedAppointment?.startTime) }}</p>
-          <p><strong>Total Price:</strong> ${{ confirmedAppointment?.totalPrice }}</p>
+          <p><strong>Time Slot:</strong> {{ formatDateTime(confirmedAppointment?.startTime) }}</p>
+          <p><strong>Total Price:</strong> <span class="gold-text">${{ confirmedAppointment?.totalPrice }}</span></p>
         </div>
         <button (click)="resetBookingFlow()" class="btn btn-primary btn-sm">Book Another Appointment</button>
       </div>
 
       <!-- Main Cart checkout view -->
-      <div *ngIf="!bookingSuccess" class="cart-card glass">
+      <div *ngIf="!bookingSuccess" class="cart-card card">
         <h3>Your Booking Cart</h3>
         
         <!-- Cart Items -->
         <div *ngIf="cartServices().length === 0" class="empty-cart">
+          <span class="empty-cart-icon">🛒</span>
           <p>Your cart is empty. Please select services on the left menu.</p>
         </div>
 
@@ -60,11 +63,11 @@
             <div *ngFor="let item of cartServices()" class="cart-item">
               <div>
                 <span class="cart-item-name">{{ item.name }}</span>
-                <span class="cart-item-time">{{ item.durationMinutes }} mins</span>
+                <span class="cart-item-time">⏱️ {{ item.durationMinutes }} mins</span>
               </div>
               <div class="cart-item-right">
                 <span class="cart-item-price">${{ item.price }}</span>
-                <button (click)="removeServiceFromCart(item.id)" class="btn-remove">&times;</button>
+                <button (click)="removeServiceFromCart(item.id)" class="btn-remove" title="Remove">&times;</button>
               </div>
             </div>
           </div>
@@ -83,7 +86,7 @@
 
           <!-- Smart Recommendations/Add-ons -->
           <div *ngIf="recommendations.length > 0" class="recommendations-box">
-            <span class="recommend-title">Highly Recommended Add-ons:</span>
+            <span class="recommend-title">✨ Recommended Add-ons:</span>
             <div class="recommendations-list">
               <div *ngFor="let rec of recommendations" class="recommend-card">
                 <div>
@@ -102,7 +105,7 @@
           </div>
 
           <!-- Schedule Selectors (Only shown if Authenticated) -->
-          <div *ngIf="auth.isAuthenticated()" class="schedule-selectors">
+          <div *ngIf="auth.isAuthenticated()" class="schedule-selectors" id="schedule-section">
             <h4 class="sub-section-title">1. Choose Date & Stylist</h4>
             
             <div class="form-group">
@@ -127,14 +130,14 @@
                 </option>
               </select>
               <small *ngIf="qualifiedStylists.length === 0" class="input-error-msg">
-                No active stylists are qualified for all selected services.
+                ⚠️ No active stylists are qualified for all selected services.
               </small>
             </div>
 
             <!-- Slots Grid Section -->
             <div *ngIf="selectedDate && selectedStylistId" class="slots-section animate-fade-in">
               <h4 class="sub-section-title">2. Select Available Time Slot</h4>
-              <p class="section-meta-text">Computed available slots on {{ selectedDate }}:</p>
+              <p class="section-meta-text">Available slots on {{ selectedDate }}:</p>
               
               <div *ngIf="loadingSlots" class="loading-spinner">
                 Calculating stylist schedule time blocks...
@@ -182,9 +185,20 @@
     </div>
   </div>
 
+  <!-- Floating Mobile Cart Bar -->
+  <div *ngIf="cartServices().length > 0 && !bookingSuccess" class="mobile-cart-bar glass animate-fade-up">
+    <div class="mobile-cart-info">
+      <span class="mobile-cart-badge">🛒 {{ cartServices().length }}</span>
+      <span class="mobile-cart-price">${{ cartTotalPrice() }}</span>
+    </div>
+    <button (click)="scrollToScheduler()" class="btn btn-primary btn-sm mobile-cart-btn">
+      Book Slot ➔
+    </button>
+  </div>
+
   <!-- Client Booking list (If logged in, show history below booking dashboard) -->
-  <div *ngIf="auth.isAuthenticated() && !bookingSuccess" class="client-history-section">
-    <h2 class="title-with-gold">Your Scheduled Bookings</h2>
+  <div *ngIf="auth.isAuthenticated() && !bookingSuccess" class="client-history-section card">
+    <h2 class="title-with-gold"><span class="gold-text">Your</span> Scheduled Bookings</h2>
     <div *ngIf="myBookings.length === 0" class="empty-history font-italic">
       You have no active or historical bookings.
     </div>

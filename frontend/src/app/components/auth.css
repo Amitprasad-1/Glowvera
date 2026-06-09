@@ -2,22 +2,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 172px);
-  padding: 40px 24px;
+  min-height: calc(100vh - 200px);
+  padding: 60px 24px;
 }
 
 .auth-card {
   width: 100%;
-  max-width: 440px;
-  padding: 40px;
-  border-radius: 16px;
-  box-shadow: var(--shadow-dark);
+  max-width: 460px;
+  padding: 48px 40px;
+  border-radius: 20px;
+  box-shadow: var(--shadow-dark), 0 0 30px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--glass-border);
 }
 
 .auth-tabs {
   display: flex;
-  border-bottom: 1px solid var(--border-color);
-  margin-bottom: 30px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 30px;
+  padding: 4px;
+  margin-bottom: 36px;
 }
 
 .auth-tab-btn {
@@ -26,20 +30,21 @@
   border: none;
   color: var(--text-secondary);
   font-family: var(--font-title);
-  font-size: 16px;
-  font-weight: 600;
-  padding: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 10px 16px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  border-radius: 30px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   text-align: center;
-  border-bottom: 2px solid transparent;
 }
 .auth-tab-btn:hover {
-  color: var(--gold-primary);
+  color: var(--text-primary);
 }
 .auth-tab-btn.active {
-  color: var(--gold-primary);
-  border-bottom-color: var(--gold-primary);
+  background: var(--gold-gradient);
+  color: var(--bg-darker);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
 }
 
 .auth-form {
@@ -48,23 +53,21 @@
 }
 
 .form-title {
-  font-size: 28px;
+  font-size: 30px;
+  font-weight: 800;
   margin-bottom: 8px;
   text-align: center;
+  letter-spacing: -0.01em;
 }
 
 .form-subtitle {
   color: var(--text-secondary);
-  font-size: 13px;
-  margin-bottom: 24px;
+  font-size: 14px;
+  margin-bottom: 30px;
   text-align: center;
+  line-height: 1.5;
 }
 
 .w-100 {
   width: 100%;
-}
-
-.w-100:disabled {
-  background: var(--border-color) !important;
-  color: var(--text-muted) !important;
 }

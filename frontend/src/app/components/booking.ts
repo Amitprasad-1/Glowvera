@@ -266,6 +266,15 @@ export class BookingComponent implements OnInit, OnDestroy {
     this.resetScheduleAndSlotChoice();
   }
 
+  scrollToScheduler() {
+    setTimeout(() => {
+      const element = document.getElementById('schedule-section');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 50);
+  }
+
   // Formatting helpers
   formatTime(timeString: string): string {
     if (!timeString) return '';

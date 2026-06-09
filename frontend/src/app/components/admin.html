@@ -1,5 +1,5 @@
 <div class="admin-container container animate-fade-in">
-  <h2 class="admin-title title-with-gold">Admin Operations Panel</h2>
+  <h2 class="admin-title title-with-gold"><span class="gold-text">Admin</span> Operations Panel</h2>
 
   <!-- Top Tab Selector -->
   <div class="admin-tabs-row">
@@ -19,7 +19,7 @@
 
   <!-- Content 1: Booking Timeline Grid -->
   <div *ngIf="activeTab === 'timeline'" class="timeline-tab animate-fade-in">
-    <div class="timeline-filters form-group">
+    <div class="timeline-filters form-group card">
       <label>Choose Date for Timeline View</label>
       <input type="date" [(ngModel)]="timelineDate" (change)="loadTimelineData()" class="form-control max-w-300">
     </div>
@@ -30,13 +30,13 @@
         <div class="time-col-header">Hour</div>
         <div *ngFor="let s of stylists" class="stylist-col-header">
           <strong>{{ s.name }}</strong>
-          <span class="header-hours">{{ formatTime(s.workingStart) }} - {{ formatTime(s.workingEnd) }}</span>
+          <span class="header-hours">⏱️ {{ formatTime(s.workingStart) }} - {{ formatTime(s.workingEnd) }}</span>
         </div>
       </div>
 
       <div class="timeline-body">
         <div *ngFor="let hour of hourlyTrack" class="timeline-row">
-          <div class="time-cell">{{ hour }}</div>
+          <div class="time-cell"><strong>{{ hour }}</strong></div>
           
           <!-- Stylist cells -->
           <div *ngFor="let s of stylists" class="stylist-cell">
@@ -47,7 +47,7 @@
             
             <!-- Check if hour falls inside break hours -->
             <div *ngIf="!isOutsideWorkingHours(s, hour) && isBreakTime(s, hour)" class="cell-block blocked-break">
-              Break Time
+              ☕ Break
             </div>
 
             <!-- Display active appointments overlapping this hour -->
@@ -72,7 +72,7 @@
           <p><strong>Client:</strong> {{ selectedAppointment.user.name }} ({{ selectedAppointment.user.email }})</p>
           <p><strong>Stylist:</strong> {{ selectedAppointment.stylist.name }}</p>
           <p><strong>Scheduled Time:</strong> {{ formatDateTime(selectedAppointment.startTime) }} to {{ formatDateTime(selectedAppointment.endTime) }}</p>
-          <p><strong>Total Pricing:</strong> ${{ selectedAppointment.totalPrice }}</p>
+          <p><strong>Total Pricing:</strong> <span class="gold-text">${{ selectedAppointment.totalPrice }}</span></p>
           <p><strong>Status:</strong> <span class="badge badge-confirmed">{{ selectedAppointment.status }}</span></p>
         </div>
         <div class="modal-actions">
@@ -93,7 +93,7 @@
           <div *ngFor="let s of stylists" class="item-list-row">
             <div>
               <strong>{{ s.name }}</strong>
-              <span class="schedule-sub">{{ formatTime(s.workingStart) }} - {{ formatTime(s.workingEnd) }} &bull; Break: {{ formatTime(s.breakStart) }}</span>
+              <span class="schedule-sub">⏱️ {{ formatTime(s.workingStart) }} - {{ formatTime(s.workingEnd) }} &bull; Break: {{ formatTime(s.breakStart) }}</span>
             </div>
             <div class="row-actions">
               <button (click)="onEditStylist(s)" class="btn btn-secondary btn-sm">Edit</button>
@@ -141,16 +141,17 @@
                 <input 
                   type="checkbox" 
                   [checked]="isStylistQualifiedFor(s.id)"
-                  (change)="toggleStylistServiceSkill(s.id)">
-                {{ s.name }} (${{ s.price }})
+                  (change)="toggleStylistServiceSkill(s.id)"
+                  class="checkbox-input">
+                <span class="checkbox-text">{{ s.name }} (${{ s.price }})</span>
               </label>
             </div>
           </div>
 
           <div class="form-group">
             <label class="checkbox-label">
-              <input type="checkbox" [(ngModel)]="stylistForm.isActive" name="isActive">
-              Active Operational Status
+              <input type="checkbox" [(ngModel)]="stylistForm.isActive" name="isActive" class="checkbox-input">
+              <span class="checkbox-text">Active Operational Status</span>
             </label>
           </div>
 
@@ -173,7 +174,7 @@
           <div *ngFor="let s of servicesPage?.content" class="item-list-row">
             <div>
               <strong>{{ s.name }}</strong>
-              <span class="schedule-sub">${{ s.price }} &bull; {{ s.durationMinutes }} mins &bull; [{{ s.category.name }}]</span>
+              <span class="schedule-sub">${{ s.price }} &bull; ⏱️ {{ s.durationMinutes }} mins &bull; [{{ s.category.name }}]</span>
             </div>
             <div class="row-actions">
               <button (click)="onEditService(s)" class="btn btn-secondary btn-sm">Edit</button>
@@ -185,7 +186,7 @@
         <!-- Pagination controls -->
         <div class="pagination-row">
           <button [disabled]="currentPage === 0" (click)="loadServicesPage(currentPage - 1)" class="btn btn-secondary btn-sm">< Prev</button>
-          <span>Page {{ currentPage + 1 }} of {{ servicesPage?.totalPages || 1 }}</span>
+          <span class="page-indicator">Page {{ currentPage + 1 }} of {{ servicesPage?.totalPages || 1 }}</span>
           <button [disabled]="servicesPage?.last" (click)="loadServicesPage(currentPage + 1)" class="btn btn-secondary btn-sm">Next ></button>
         </div>
       </div>
@@ -246,7 +247,7 @@
     <div *ngIf="reminderResult" class="reminder-result glass animate-fade-up">
       <h4>Simulation Summary</h4>
       <p><strong>Target Date:</strong> {{ reminderResult.date }}</p>
-      <p><strong>Notifications Sent:</strong> {{ reminderResult.remindersSent }} client alert(s)</p>
+      <p><strong>Notifications Sent:</strong> <span class="gold-text">{{ reminderResult.remindersSent }} client alert(s)</span></p>
       <div class="alert alert-success mt-16 font-sm-alert">
         {{ reminderResult.message }}
       </div>

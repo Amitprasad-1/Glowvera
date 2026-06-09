@@ -1,5 +1,6 @@
 .booking-container {
-  padding: 40px 24px;
+  padding: 40px 0;
+  position: relative;
 }
 
 .booking-grid {
@@ -17,9 +18,11 @@
 
 .title-with-gold {
   font-size: 26px;
+  font-weight: 800;
   margin-bottom: 24px;
   position: relative;
-  padding-bottom: 8px;
+  padding-bottom: 12px;
+  letter-spacing: -0.01em;
 }
 .title-with-gold::after {
   content: '';
@@ -27,54 +30,83 @@
   bottom: 0;
   left: 0;
   width: 40px;
-  height: 2px;
+  height: 3px;
   background-color: var(--gold-primary);
+  border-radius: 2px;
 }
 
-/* Vertical Category Tabs */
-.category-tabs-vertical {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 24px;
+/* Category Tabs Vertical - now scroll-x swipeable on mobile */
+.category-tabs-vertical.scroll-x-container {
+  margin-left: -16px;
+  margin-right: -16px;
+  width: calc(100% + 32px);
+  padding: 4px 16px 20px;
 }
 
-.cat-vertical-btn {
+.cat-vertical-btn.scroll-x-item {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
   background: rgba(255, 255, 255, 0.02);
   color: var(--text-secondary);
   border: 1px solid var(--border-color);
-  padding: 10px 18px;
+  padding: 10px 20px;
   font-family: var(--font-title);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  border-radius: 30px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .cat-vertical-btn:hover {
-  border-color: var(--gold-primary);
+  border-color: var(--border-hover);
   color: var(--gold-primary);
 }
 .cat-vertical-btn.active {
   background: var(--gold-gradient);
   color: var(--bg-darker);
   border-color: transparent;
-  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+}
+
+/* Override category tabs scroll on desktop */
+@media (min-width: 769px) {
+  .category-tabs-vertical.scroll-x-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+    margin-bottom: 24px;
+    scroll-snap-type: none;
+    overflow-x: visible;
+  }
 }
 
 /* Service catalog listings */
 .services-list-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 20px;
 }
 
 .service-item-card {
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
   padding: 20px;
   display: flex;
   flex-direction: column;
   height: 100%;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.service-item-card:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--border-hover);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
 }
 
 .service-header-row {
@@ -87,41 +119,55 @@
 .service-header-row h4 {
   font-size: 16px;
   font-weight: 600;
+  line-height: 1.3;
 }
 .service-header-row .service-price {
   font-family: var(--font-title);
   font-size: 18px;
   color: var(--gold-primary);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .service-meta {
   font-size: 12px;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   margin-bottom: 16px;
   flex-grow: 1;
 }
 
 .btn-service-add {
   width: 100%;
+  border-radius: 20px;
 }
 
 /* Checkout cart styling */
 .cart-card {
   padding: 30px;
-  border-radius: 16px;
 }
 .cart-card h3 {
   font-size: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 12px;
+  font-family: var(--font-title);
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .empty-cart {
   padding: 40px 0;
   text-align: center;
-  color: var(--text-secondary);
+  color: var(--text-muted);
+}
+
+.empty-cart-icon {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+.empty-cart p {
   font-size: 14px;
 }
 
@@ -143,40 +189,48 @@
 
 .cart-item-name {
   display: block;
-  font-weight: 500;
+  font-weight: 600;
 }
 .cart-item-time {
   font-size: 11px;
   color: var(--text-muted);
 }
+
+.cart-item-right {
+  display: flex;
+  align-items: center;
+}
+
 .cart-item-price {
-  font-weight: 600;
-  color: var(--gold-secondary);
-  margin-right: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-right: 16px;
 }
 .btn-remove {
   background: transparent;
   border: none;
   color: var(--error-color);
-  font-size: 18px;
+  font-size: 20px;
   cursor: pointer;
   padding: 4px;
-  opacity: 0.7;
-  transition: opacity 0.3s;
+  opacity: 0.6;
+  line-height: 1;
+  transition: all 0.3s;
 }
 .btn-remove:hover {
   opacity: 1;
+  transform: scale(1.2);
 }
 
 .cart-totals {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 16px;
+  border-radius: 12px;
+  padding: 18px;
   margin-bottom: 24px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .total-row {
@@ -188,36 +242,38 @@
 .total-row:first-child {
   font-size: 16px;
   color: var(--text-primary);
-  font-weight: 600;
+  font-weight: 700;
   border-bottom: 1px solid var(--border-color);
-  padding-bottom: 8px;
+  padding-bottom: 10px;
 }
 .total-val {
   color: var(--gold-primary) !important;
   font-family: var(--font-title);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 /* Recommendations styling */
 .recommendations-box {
   margin-bottom: 24px;
-  background: rgba(212, 175, 55, 0.03);
-  border: 1px solid rgba(212, 175, 55, 0.1);
-  padding: 16px;
-  border-radius: 8px;
+  background: rgba(245, 158, 11, 0.03);
+  border: 1px solid rgba(245, 158, 11, 0.12);
+  padding: 18px;
+  border-radius: 12px;
 }
 .recommend-title {
   display: block;
   font-size: 12px;
   color: var(--gold-primary);
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  letter-spacing: 0.05em;
+  font-family: var(--font-title);
 }
 .recommendations-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 .recommend-card {
   display: flex;
@@ -227,68 +283,72 @@
 }
 .rec-name {
   display: block;
-  font-weight: 500;
+  font-weight: 600;
 }
 .rec-meta {
   font-size: 11px;
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 .btn-rec-add {
-  padding: 4px 10px;
+  padding: 6px 14px;
   font-size: 11px;
-  border-radius: 4px;
+  border-radius: 20px;
 }
 
 .login-prompt {
   text-align: center;
-  padding: 20px 0;
+  padding: 24px 0;
 }
 .login-prompt p {
   font-size: 13px;
   color: var(--text-secondary);
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 /* Schedule section styling */
 .schedule-selectors {
-  margin-top: 30px;
+  margin-top: 32px;
   border-top: 1px solid var(--border-color);
-  padding-top: 24px;
+  padding-top: 28px;
 }
 
 .sub-section-title {
   font-size: 16px;
   font-family: var(--font-title);
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-primary);
+  font-weight: 700;
 }
 
 .input-error-msg {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--error-color);
-  margin-top: 6px;
+  margin-top: 8px;
+  font-weight: 500;
 }
 
 .slots-section {
-  margin-top: 24px;
+  margin-top: 28px;
   border-top: 1px dashed var(--border-color);
-  padding-top: 20px;
+  padding-top: 24px;
 }
 
 .section-meta-text {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-secondary);
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .loading-spinner {
   text-align: center;
-  padding: 20px 0;
+  padding: 24px 0;
   font-size: 13px;
-  color: var(--gold-secondary);
+  color: var(--gold-primary);
+  font-weight: 500;
+  animation: pulse 1s infinite alternate;
 }
 
 .no-slots-alert {
@@ -297,80 +357,87 @@
   border: 1px solid rgba(239, 68, 68, 0.15);
   color: var(--error-color);
   font-size: 13px;
-  border-radius: 8px;
-  line-height: 1.5;
+  border-radius: 10px;
+  line-height: 1.6;
 }
 
 .slots-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 12px;
+}
+
+@media (max-width: 576px) {
+  .slots-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .slot-btn {
-  background: rgba(7, 7, 8, 0.4);
+  background: rgba(4, 4, 6, 0.5);
   color: var(--text-secondary);
-  border: 1px solid var(--border-color);
-  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px;
   font-family: var(--font-title);
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.3s ease;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .slot-btn:hover {
   border-color: var(--gold-secondary);
   color: var(--gold-primary);
+  background: rgba(245, 158, 11, 0.03);
 }
 .slot-btn.active {
-  background-color: var(--gold-primary);
+  background: var(--gold-gradient);
   border-color: transparent;
   color: var(--bg-darker);
-  font-weight: 600;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+  font-weight: 700;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.35);
 }
 
 /* Hold countdown visual timer */
 .hold-timer-tray {
-  margin-top: 20px;
-  background: rgba(212, 175, 55, 0.04);
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  border-radius: 8px;
-  padding: 16px;
+  margin-top: 24px;
+  background: rgba(245, 158, 11, 0.04);
+  border: 1px solid rgba(245, 158, 11, 0.18);
+  border-radius: 12px;
+  padding: 20px;
 }
 
 .timer-desc {
   display: flex;
   justify-content: space-between;
   font-size: 13px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .timer-countdown {
   color: var(--gold-primary);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .timer-progressbar {
-  height: 4px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 2px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
   overflow: hidden;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .timer-progress-fill {
   height: 100%;
-  background: var(--gold-primary);
+  background: var(--gold-gradient);
   width: 100%;
   transition: width 1s linear;
 }
 
 .font-sm-alert {
   font-size: 12px;
-  padding: 8px 12px;
-  margin-bottom: 16px;
+  padding: 10px 14px;
+  margin-bottom: 18px;
 }
 
 .btn-confirm-booking {
@@ -378,42 +445,61 @@
   animation: pulseGlow 2s infinite;
 }
 
-/* Success view styling */
+/* Success view styling (invoice ticket look) */
 .success-booking-card {
   text-align: center;
-  padding: 40px;
-  border-radius: 16px;
-  border-color: var(--success-color);
+  padding: 40px 30px;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.1);
 }
 
 .success-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
-  animation: pulse 1.5s infinite alternate;
+  font-size: 52px;
+  margin-bottom: 20px;
+  animation: pulse 1.2s infinite alternate cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-block;
 }
 
 .success-booking-card h3 {
-  font-size: 24px;
+  font-size: 26px;
   color: var(--success-color);
   margin-bottom: 12px;
+}
+
+.success-booking-card p {
+  color: var(--text-secondary);
+  font-size: 14px;
 }
 
 .success-details {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 16px;
-  margin: 24px 0;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 28px 0;
   text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   font-size: 14px;
+  position: relative;
+}
+
+.success-details::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--success-color);
+  border-radius: 12px 0 0 12px;
 }
 
 /* Client History Section */
 .client-history-section {
   margin-top: 60px;
+  padding: 30px;
 }
 
 .empty-history {
@@ -423,6 +509,68 @@
 
 .gold-text-bold {
   color: var(--gold-primary);
-  font-weight: 600;
+  font-weight: 700;
   font-family: var(--font-title);
+  font-size: 16px;
+}
+
+/* Mobile Floating checkout cart bar */
+.mobile-cart-bar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .booking-container {
+    padding-bottom: 110px; /* Prevent floating bar overlap on footer */
+  }
+  
+  .mobile-cart-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    bottom: 24px;
+    left: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: rgba(18, 18, 25, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 40px;
+    padding: 12px 24px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.6), 0 0 20px rgba(245, 158, 11, 0.15);
+    animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  
+  .mobile-cart-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .mobile-cart-badge {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--gold-primary);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  
+  .mobile-cart-price {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-primary);
+    font-family: var(--font-title);
+  }
+  
+  .mobile-cart-btn {
+    border-radius: 20px;
+    padding: 10px 18px;
+    font-size: 13px;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+    animation: pulseGlow 3s infinite alternate;
+  }
 }
