@@ -106,37 +106,48 @@
 
           <!-- Schedule Selectors (Only shown if Authenticated) -->
           <div *ngIf="auth.isAuthenticated()" class="schedule-selectors" id="schedule-section">
-            <h4 class="sub-section-title">1. Choose Date & Stylist</h4>
             
-            <div class="form-group">
-              <label>Select Date</label>
-              <input 
-                type="date" 
-                [(ngModel)]="selectedDate" 
-                (change)="onScheduleParamsChange()"
-                [min]="todayString" 
-                class="form-control">
+            <!-- Step 1: Choose Date -->
+            <div class="booking-step-container">
+              <h4 class="sub-section-title">1. Choose Date</h4>
+              <div class="booking-days-scroll scroll-x-container">
+                <button 
+                  *ngFor="let day of bookingDays" 
+                  (click)="selectBookingDate(day.dateString)"
+                  [class.active]="selectedDate === day.dateString"
+                  class="day-picker-btn scroll-x-item">
+                  <span class="day-month">{{ day.month }}</span>
+                  <span class="day-number">{{ day.dayNum }}</span>
+                  <span class="day-name">{{ day.dayName }}</span>
+                </button>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label>Select Stylist (Qualified Staff)</label>
-              <select 
-                [(ngModel)]="selectedStylistId" 
-                (change)="onScheduleParamsChange()"
-                class="form-control">
-                <option [value]="null" disabled selected>-- Select a Stylist --</option>
-                <option *ngFor="let s of qualifiedStylists" [value]="s.id">
-                  {{ s.name }} (Shift: {{ formatTime(s.workingStart) }} - {{ formatTime(s.workingEnd) }})
-                </option>
-              </select>
+            <!-- Step 2: Choose Stylist -->
+            <div *ngIf="selectedDate" class="booking-step-container animate-fade-in">
+              <h4 class="sub-section-title">2. Choose Stylist</h4>
+              <div class="stylist-picker-scroll scroll-x-container">
+                <button 
+                  *ngFor="let s of qualifiedStylists" 
+                  (click)="selectStylist(s.id)"
+                  [class.active]="selectedStylistId === s.id"
+                  class="stylist-picker-card scroll-x-item card">
+                  <div class="picker-avatar">{{ s.name.charAt(0) }}</div>
+                  <div class="picker-details">
+                    <span class="picker-name">{{ s.name }}</span>
+                    <span class="picker-shift">Shift: {{ formatTime(s.workingStart) }} - {{ formatTime(s.workingEnd) }}</span>
+                  </div>
+                  <div class="picker-selected-indicator">✓</div>
+                </button>
+              </div>
               <small *ngIf="qualifiedStylists.length === 0" class="input-error-msg">
                 ⚠️ No active stylists are qualified for all selected services.
               </small>
             </div>
 
-            <!-- Slots Grid Section -->
+            <!-- Step 3: Select Time Slot -->
             <div *ngIf="selectedDate && selectedStylistId" class="slots-section animate-fade-in">
-              <h4 class="sub-section-title">2. Select Available Time Slot</h4>
+              <h4 class="sub-section-title">3. Select Available Time Slot</h4>
               <p class="section-meta-text">Available slots on {{ selectedDate }}:</p>
               
               <div *ngIf="loadingSlots" class="loading-spinner">
@@ -147,14 +158,36 @@
                 We are sorry! No slots are available for the selected stylist and date matching your total duration ({{ cartTotalDuration() }} mins). Please select a different date or stylist.
               </div>
 
-              <div *ngIf="!loadingSlots && availableSlots.length > 0" class="slots-grid">
-                <button 
-                  *ngFor="let slot of availableSlots" 
-                  (click)="onSelectSlot(slot)"
-                  [class.active]="selectedSlot === slot"
-                  class="slot-btn">
-                  {{ formatDateTime(slot, 'timeOnly') }}
-                </button>
+              <div *ngIf="!loadingSlots && availableSlots.length > 0" class="slots-grouping-container">
+                
+                <!-- Morning slots -->
+                <div *ngIf="getMorningSlots().length > 0" class="time-slot-group animate-fade-in">
+                  <span class="slot-group-header">🌅 Morning Slots (AM)</span>
+                  <div class="slots-grid">
+                    <button 
+                      *ngFor="let slot of getMorningSlots()" 
+                      (click)="onSelectSlot(slot)"
+                      [class.active]="selectedSlot === slot"
+                      class="slot-btn">
+                      {{ formatDateTime(slot, 'timeOnly') }}
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Afternoon/Evening slots -->
+                <div *ngIf="getAfternoonSlots().length > 0" class="time-slot-group animate-fade-in">
+                  <span class="slot-group-header">🌇 Afternoon & Evening Slots (PM)</span>
+                  <div class="slots-grid">
+                    <button 
+                      *ngFor="let slot of getAfternoonSlots()" 
+                      (click)="onSelectSlot(slot)"
+                      [class.active]="selectedSlot === slot"
+                      class="slot-btn">
+                      {{ formatDateTime(slot, 'timeOnly') }}
+                    </button>
+                  </div>
+                </div>
+
               </div>
 
               <!-- Hold countdown timer visual -->

@@ -30,6 +30,7 @@ export class BookingComponent implements OnInit, OnDestroy {
   allServices: ServiceItem[] = [];
   recommendations: ServiceItem[] = [];
   selectedCategoryId: number | null = null;
+  bookingDays: { dateString: string, dayName: string, dayNum: string, month: string }[] = [];
 
   // Booking Flow States
   qualifiedStylists: any[] = [];
@@ -63,11 +64,62 @@ export class BookingComponent implements OnInit, OnDestroy {
     const today = new Date();
     this.todayString = today.toISOString().split('T')[0];
 
+    this.generateBookingDays();
     this.loadCategories();
     this.loadAllServices();
     if (this.auth.isAuthenticated()) {
       this.loadMyBookings();
     }
+  }
+
+  generateBookingDays() {
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() + i);
+      const dateString = d.toISOString().split('T')[0];
+      const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
+      const dayNum = d.getDate().toString();
+      const month = d.toLocaleDateString('en-US', { month: 'short' });
+      days.push({ dateString, dayName, dayNum, month });
+    }
+    this.bookingDays = days;
+  }
+
+  selectBookingDate(dateString: string) {
+    this.selectedDate = dateString;
+    this.resetScheduleAndSlotChoice();
+    this.onScheduleParamsChange();
+  }
+
+  selectStylist(stylistId: number) {
+    this.selectedStylistId = stylistId;
+    this.resetScheduleAndSlotChoice();
+    this.onScheduleParamsChange();
+  }
+
+  getMorningSlots(): string[] {
+    return this.availableSlots.filter(slot => {
+      try {
+        const timePart = slot.split('T')[1];
+        const hour = parseInt(timePart.split(':')[0], 10);
+        return hour < 12;
+      } catch (e) {
+        return false;
+      }
+    });
+  }
+
+  getAfternoonSlots(): string[] {
+    return this.availableSlots.filter(slot => {
+      try {
+        const timePart = slot.split('T')[1];
+        const hour = parseInt(timePart.split(':')[0], 10);
+        return hour >= 12;
+      } catch (e) {
+        return false;
+      }
+    });
   }
 
   ngOnDestroy() {

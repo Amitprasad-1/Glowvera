@@ -6,7 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
 
+import java.util.Optional;
+
 public interface StylistRepository extends JpaRepository<Stylist, Long> {
+    Optional<Stylist> findByName(String name);
     
     // Skill-to-staff filtering query (single service)
     @Query("SELECT s FROM Stylist s JOIN s.services serv WHERE serv.id = :serviceId AND s.isActive = true")
