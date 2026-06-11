@@ -259,6 +259,48 @@
   scroll-snap-align: start;
 }
 
+.category-card.scroll-x-item > * {
+  position: relative;
+  z-index: 2;
+}
+
+.category-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+  opacity: 0.12;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+}
+
+.category-card:hover::before {
+  transform: scale(1.1);
+  opacity: 0.22;
+}
+
+.category-card.hair::before {
+  background-image: url('/cat_hair.png');
+}
+
+.category-card.beard::before {
+  background-image: url('/cat_grooming.png');
+}
+
+.category-card.skin::before {
+  background-image: url('/cat_skin.png');
+}
+
+.category-card.spa::before {
+  background-image: url('/cat_spa.png');
+}
+
+
 .category-card:hover {
   border-color: var(--border-hover);
   transform: translateY(-8px);
