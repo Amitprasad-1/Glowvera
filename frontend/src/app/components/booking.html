@@ -325,7 +325,7 @@
       </div>
 
       <!-- Credit Card Input Form -->
-      <form *ngIf="!paymentProcessing" (submit)="processSimulatedPayment(); $event.preventDefault()" class="modal-body animate-fade-in">
+      <form *ngIf="!paymentProcessing" (ngSubmit)="processSimulatedPayment()" class="modal-body animate-fade-in">
         <div class="total-summary-card">
           <span>Total Booking Price:</span>
           <span class="gold-text">₹{{ cartTotalPrice() }}</span>
