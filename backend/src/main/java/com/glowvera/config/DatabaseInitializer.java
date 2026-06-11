@@ -73,19 +73,19 @@ public class DatabaseInitializer implements CommandLineRunner {
         Category skinFacial = getOrCreateCategory("Skin & Facial");
 
         // 3. Seed Services (Granular check per service name)
-        Service s1 = getOrCreateService(hairCare, "Unisex Haircut & Styling", new BigDecimal("800.00"), 45);
-        Service s2 = getOrCreateService(hairCare, "Luxury Hair Spa & Deep Conditioning", new BigDecimal("1500.00"), 60);
-        Service s3 = getOrCreateService(hairCare, "Professional Hair Coloring", new BigDecimal("4000.00"), 120);
-        Service s4 = getOrCreateService(hairCare, "Hair Blowout & Styling", new BigDecimal("600.00"), 30);
+        Service s1 = getOrCreateService(hairCare, "Unisex Haircut & Styling", new BigDecimal("2400.00"), 45);
+        Service s2 = getOrCreateService(hairCare, "Luxury Hair Spa & Deep Conditioning", new BigDecimal("4500.00"), 60);
+        Service s3 = getOrCreateService(hairCare, "Professional Hair Coloring", new BigDecimal("9500.00"), 120);
+        Service s4 = getOrCreateService(hairCare, "Hair Blowout & Styling", new BigDecimal("1800.00"), 30);
 
-        Service s5 = getOrCreateService(beardGrooming, "Classic Beard Trim & Razor Styling", new BigDecimal("400.00"), 30);
-        Service s6 = getOrCreateService(beardGrooming, "Hot Towel Royal Shave", new BigDecimal("500.00"), 45);
+        Service s5 = getOrCreateService(beardGrooming, "Classic Beard Trim & Razor Styling", new BigDecimal("1200.00"), 30);
+        Service s6 = getOrCreateService(beardGrooming, "Hot Towel Royal Shave", new BigDecimal("1500.00"), 45);
 
-        Service s7 = getOrCreateService(spaMassage, "Swedish Deep Tissue Massage", new BigDecimal("2500.00"), 60);
-        Service s8 = getOrCreateService(spaMassage, "Hot Stone Relaxing Therapy", new BigDecimal("3500.00"), 90);
+        Service s7 = getOrCreateService(spaMassage, "Swedish Deep Tissue Massage", new BigDecimal("6000.00"), 60);
+        Service s8 = getOrCreateService(spaMassage, "Hot Stone Relaxing Therapy", new BigDecimal("8500.00"), 90);
 
-        Service s9 = getOrCreateService(skinFacial, "Charcoal Deep Cleansing Facial", new BigDecimal("1500.00"), 45);
-        Service s10 = getOrCreateService(skinFacial, "Luxury Anti-Aging Facial", new BigDecimal("2500.00"), 60);
+        Service s9 = getOrCreateService(skinFacial, "Charcoal Deep Cleansing Facial", new BigDecimal("3800.00"), 45);
+        Service s10 = getOrCreateService(skinFacial, "Luxury Anti-Aging Facial", new BigDecimal("5500.00"), 60);
 
         // 4. Seed Stylists (Granular check per stylist name)
         getOrCreateStylist("Alex Carter", LocalTime.of(9, 0), LocalTime.of(18, 0), LocalTime.of(13, 0), LocalTime.of(14, 0), s1, s2, s3, s4);
