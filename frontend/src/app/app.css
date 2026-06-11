@@ -116,6 +116,22 @@
   color: var(--text-primary);
   box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
 }
+.admin-link.active {
+  background: var(--gold-gradient) !important;
+  color: var(--bg-darker) !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4) !important;
+}
+
+/* Logout Button Hover State */
+.btn-logout:hover,
+.btn-mobile-logout:hover {
+  background-color: var(--error-color) !important;
+  border-color: var(--error-color) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.45) !important;
+}
+
 
 .user-greeting {
   font-size: 13px;

@@ -17,7 +17,7 @@
       
       @if (auth.isAuthenticated()) {
         <span class="user-greeting">Welcome, <span class="greeting-name">{{ auth.currentUserSignal()?.name }}</span></span>
-        <button (click)="logout()" class="btn btn-secondary btn-sm">Logout</button>
+        <button (click)="logout()" class="btn btn-secondary btn-sm btn-logout">Logout</button>
       } @else {
         <a routerLink="/auth" class="btn btn-primary btn-sm btn-signin">Sign In</a>
       }
