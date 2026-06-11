@@ -7,16 +7,20 @@
       </span>
       <span class="sub-logo">LUXURY UNISEX SALON</span>
     </a>
-    <nav class="nav-links">
+    <!-- Center: Main Navigation Links -->
+    <nav class="nav-links-center">
       <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Home</a>
       <a routerLink="/booking" routerLinkActive="active" class="nav-link">Book Now</a>
       
-      @if (showInstallBtn) {
-        <button (click)="installPwa()" class="btn btn-secondary btn-sm install-app-btn">📲 Install App</button>
-      }
-      
       @if (auth.isAdmin()) {
         <a routerLink="/admin" routerLinkActive="active" class="nav-link admin-link">💎 Admin Dashboard</a>
+      }
+    </nav>
+
+    <!-- Right: Auth actions & PWA Install Button -->
+    <div class="nav-actions-right">
+      @if (showInstallBtn) {
+        <button (click)="installPwa()" class="btn btn-secondary btn-sm install-app-btn">📲 Install App</button>
       }
       
       @if (auth.isAuthenticated()) {
@@ -25,7 +29,7 @@
       } @else {
         <a routerLink="/auth" class="btn btn-primary btn-sm btn-signin">Sign In</a>
       }
-    </nav>
+    </div>
 
     <!-- Hamburger toggle button -->
     <button class="hamburger-btn" [class.active]="mobileMenuOpen" (click)="toggleMobileMenu()" aria-label="Toggle navigation">

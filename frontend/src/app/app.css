@@ -55,10 +55,18 @@
 }
 
 /* Nav Links */
-.nav-links {
+.nav-links,
+.nav-links-center {
   display: flex;
   align-items: center;
   gap: 30px;
+}
+
+/* Nav Actions Right */
+.nav-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .nav-link {
@@ -361,12 +369,25 @@
 }
 
 @media (max-width: 768px) {
-  .nav-links {
-    display: none; /* Hide main links on mobile viewports */
+  .nav-links,
+  .nav-links-center,
+  .nav-actions-right {
+    display: none !important; /* Hide main links on mobile viewports */
   }
   
   .hamburger-btn {
     display: flex; /* Show toggle trigger */
+  }
+}
+
+/* Make sure logo fits beautifully on narrow mobile viewports */
+@media (max-width: 480px) {
+  .logo .logo-main {
+    font-size: 19px !important;
+  }
+  .logo .sub-logo {
+    font-size: 7.5px !important;
+    letter-spacing: 0.22em !important;
   }
 }
 

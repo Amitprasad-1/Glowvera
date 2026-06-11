@@ -7,7 +7,13 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class ApiService {
-  private readonly baseUrl = 'http://localhost:8080/api';
+  private get baseUrl(): string {
+    const hostname = window.location.hostname;
+    if (hostname && hostname !== 'localhost' && hostname !== '127.0.0.1') {
+      return `http://${hostname}:8080/api`;
+    }
+    return 'http://localhost:8080/api';
+  }
 
   constructor(private http: HttpClient, private auth: AuthService) {}
 

@@ -14,7 +14,13 @@ export interface User {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly baseUrl = 'http://localhost:8080/api/auth';
+  private get baseUrl(): string {
+    const hostname = window.location.hostname;
+    if (hostname && hostname !== 'localhost' && hostname !== '127.0.0.1') {
+      return `http://${hostname}:8080/api/auth`;
+    }
+    return 'http://localhost:8080/api/auth';
+  }
   
   // Angular signals for reactive state management
   currentUserSignal = signal<User | null>(null);
