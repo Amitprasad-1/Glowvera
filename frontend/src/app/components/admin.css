@@ -559,4 +559,25 @@
   font-weight: 700 !important;
 }
 
+@media (max-width: 576px) {
+  .date-picker-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .date-input-control {
+    max-width: 100% !important;
+    width: 100%;
+  }
+
+  .date-today-btn {
+    grid-column: span 3;
+    width: 100%;
+    margin-top: 4px;
+  }
+}
+
+
 
