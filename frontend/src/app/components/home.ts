@@ -87,6 +87,13 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/booking']);
   }
 
+  scrollToServicesSection() {
+    const element = document.getElementById('services-preview');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
   formatTime(timeString: string): string {
     if (!timeString) return '';
     try {
