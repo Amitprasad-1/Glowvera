@@ -248,58 +248,16 @@
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 16px;
-  padding: 36px 24px;
-  text-align: center;
+  padding: 0;
+  text-align: left;
   position: relative;
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   scroll-snap-align: start;
 }
-
-.category-card.scroll-x-item > * {
-  position: relative;
-  z-index: 2;
-}
-
-.category-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 1;
-  opacity: 0.12;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
-}
-
-.category-card:hover::before {
-  transform: scale(1.1);
-  opacity: 0.22;
-}
-
-.category-card.hair::before {
-  background-image: url('/cat_hair.png');
-}
-
-.category-card.beard::before {
-  background-image: url('/cat_grooming.png');
-}
-
-.category-card.skin::before {
-  background-image: url('/cat_skin.png');
-}
-
-.category-card.spa::before {
-  background-image: url('/cat_spa.png');
-}
-
 
 .category-card:hover {
   border-color: var(--border-hover);
@@ -307,41 +265,87 @@
   box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(245, 158, 11, 0.05);
 }
 
-.category-icon-wrapper {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+.category-card-image {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--bg-darker);
+}
+
+.category-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.category-card:hover .category-card-image img {
+  transform: scale(1.08);
+}
+
+.category-card-image::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(10, 10, 15, 0.1) 60%, rgba(15, 15, 20, 0.7) 100%);
+  pointer-events: none;
+}
+
+.category-card-content {
+  padding: 24px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-  transition: all 0.4s ease;
-}
-
-.category-card:hover .category-icon-wrapper {
-  background: rgba(245, 158, 11, 0.05);
-  border-color: var(--gold-primary);
-  transform: rotate(10deg) scale(1.1);
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
-}
-
-.cat-icon {
-  font-size: 28px;
+  flex-direction: column;
+  gap: 8px;
+  flex-grow: 1;
 }
 
 .category-card h3 {
   font-family: var(--font-title);
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin: 0;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+.category-card:hover h3 {
+  color: var(--gold-primary);
 }
 
 .category-card p {
   font-size: 14px;
   color: var(--text-secondary);
   line-height: 1.6;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.category-card-link {
+  color: var(--gold-primary);
+  font-family: var(--font-title);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+.category-card-link .arrow {
+  transition: transform 0.3s ease;
+  display: inline-block;
+}
+
+.category-card:hover .category-card-link .arrow {
+  transform: translateX(6px);
 }
 
 .cat-hover-bar {
@@ -352,6 +356,7 @@
   height: 3px;
   background: var(--gold-gradient);
   transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 3;
 }
 
 .category-card:hover .cat-hover-bar {
