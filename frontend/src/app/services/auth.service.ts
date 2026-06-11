@@ -16,7 +16,7 @@ export interface User {
 export class AuthService {
   private get baseUrl(): string {
     const hostname = window.location.hostname;
-    if (hostname && hostname !== 'localhost' && hostname !== '127.0.0.1') {
+    if (hostname && hostname !== 'localhost' && hostname !== '127.0.0.1' && !hostname.includes('vercel.app')) {
       return `http://${hostname}:8080/api/auth`;
     }
     return 'http://localhost:8080/api/auth';
