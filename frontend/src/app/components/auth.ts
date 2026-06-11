@@ -36,14 +36,11 @@ export class AuthComponent {
     
     this.authService.login(this.loginData).subscribe({
       next: (user) => {
-        this.successMessage = 'Login successful! Redirecting...';
-        setTimeout(() => {
-          if (user.role === 'ADMIN') {
-            this.router.navigate(['/admin']);
-          } else {
-            this.router.navigate(['/booking']);
-          }
-        }, 1200);
+        if (user.role === 'ADMIN') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/booking']);
+        }
       },
       error: (err) => {
         this.errorMessage = err.error?.message || 'Invalid email or password. Please try again.';
@@ -57,10 +54,7 @@ export class AuthComponent {
 
     this.authService.register(this.registerData).subscribe({
       next: () => {
-        this.successMessage = 'Account created successfully! Redirecting to booking...';
-        setTimeout(() => {
-          this.router.navigate(['/booking']);
-        }, 1200);
+        this.router.navigate(['/booking']);
       },
       error: (err) => {
         this.errorMessage = err.error?.message || 'Failed to create account. Email might be in use.';
