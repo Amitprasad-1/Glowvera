@@ -282,6 +282,24 @@ select.form-control {
   background-position: right 16px center;
   background-size: 18px;
   padding-right: 40px;
+  cursor: pointer;
+}
+
+select.form-control option {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  padding: 12px;
+}
+
+/* Hide default spinners on number inputs */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 /* Keyframe Animations */
