@@ -61,18 +61,54 @@ export class AdminComponent implements OnInit {
 
   ngOnInit() {
     const today = new Date();
-    this.timelineDate = today.toISOString().split('T')[0];
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    this.timelineDate = `${year}-${month}-${day}`;
     
     // Default reminder date to tomorrow
-    const tomorrow = new Date();
+    const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
-    this.reminderDate = tomorrow.toISOString().split('T')[0];
+    const tYear = tomorrow.getFullYear();
+    const tMonth = String(tomorrow.getMonth() + 1).padStart(2, '0');
+    const tDay = String(tomorrow.getDate()).padStart(2, '0');
+    this.reminderDate = `${tYear}-${tMonth}-${tDay}`;
 
     this.loadCategories();
     this.loadStylists();
     this.loadAllServicesForSelection();
     this.loadTimelineData();
     this.loadServicesPage(0);
+  }
+
+  // --- Date Navigation ---
+  prevDay() {
+    if (!this.timelineDate) return;
+    const parts = this.timelineDate.split('-');
+    const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+    d.setDate(d.getDate() - 1);
+    this.setTimelineDateFromDate(d);
+  }
+
+  nextDay() {
+    if (!this.timelineDate) return;
+    const parts = this.timelineDate.split('-');
+    const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+    d.setDate(d.getDate() + 1);
+    this.setTimelineDateFromDate(d);
+  }
+
+  setToday() {
+    const d = new Date();
+    this.setTimelineDateFromDate(d);
+  }
+
+  private setTimelineDateFromDate(date: Date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    this.timelineDate = `${year}-${month}-${day}`;
+    this.loadTimelineData();
   }
 
   // --- Data Loaders ---

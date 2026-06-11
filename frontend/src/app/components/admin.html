@@ -21,7 +21,18 @@
   <div *ngIf="activeTab === 'timeline'" class="timeline-tab animate-fade-in">
     <div class="timeline-filters form-group card">
       <label>Choose Date for Timeline View</label>
-      <input type="date" [(ngModel)]="timelineDate" (change)="loadTimelineData()" class="form-control max-w-300">
+      <div class="date-picker-row">
+        <button type="button" class="btn btn-secondary date-nav-btn" (click)="prevDay()" title="Previous Day">
+          ◀
+        </button>
+        <input type="date" [(ngModel)]="timelineDate" (change)="loadTimelineData()" class="form-control date-input-control">
+        <button type="button" class="btn btn-secondary date-nav-btn" (click)="nextDay()" title="Next Day">
+          ▶
+        </button>
+        <button type="button" class="btn btn-primary date-today-btn" (click)="setToday()">
+          Today
+        </button>
+      </div>
     </div>
 
     <!-- Timeline Grid Layout -->

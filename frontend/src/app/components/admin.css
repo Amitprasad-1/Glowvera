@@ -56,9 +56,9 @@
 .timeline-grid-wrapper {
   overflow-x: auto;
   border-radius: 16px;
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(245, 158, 11, 0.25);
   margin-top: 24px;
-  box-shadow: var(--shadow-dark);
+  box-shadow: var(--shadow-dark), 0 0 15px rgba(245, 158, 11, 0.05);
 }
 
 .timeline-header-row {
@@ -514,4 +514,49 @@
     justify-content: flex-end;
   }
 }
+
+/* Custom distinct gold borders for upper filters card */
+.timeline-filters {
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+  box-shadow: var(--shadow-dark), 0 0 15px rgba(245, 158, 11, 0.03) !important;
+}
+
+/* Date navigation styling */
+.date-picker-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.date-input-control {
+  max-width: 220px !important;
+  text-align: center;
+  height: 48px;
+  padding: 10px 16px;
+}
+
+.date-nav-btn {
+  height: 48px;
+  width: 48px;
+  padding: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+}
+
+.date-today-btn {
+  height: 48px;
+  padding: 0 24px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+}
+
 
