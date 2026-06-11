@@ -325,30 +325,6 @@
   flex-grow: 1;
 }
 
-.category-card-link {
-  color: var(--gold-primary);
-  font-family: var(--font-title);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 12px;
-  transition: color 0.3s ease;
-  cursor: pointer;
-}
-
-.category-card-link .arrow {
-  transition: transform 0.3s ease;
-  display: inline-block;
-}
-
-.category-card:hover .category-card-link .arrow {
-  transform: translateX(6px);
-}
-
 .cat-hover-bar {
   position: absolute;
   bottom: 0;
