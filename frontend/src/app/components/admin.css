@@ -451,3 +451,37 @@
   color: var(--text-muted);
   font-size: 11px;
 }
+
+/* Admin Responsive Mobile Enhancements */
+@media (max-width: 576px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .form-row .col {
+    width: 100%;
+  }
+  
+  .modal-card {
+    padding: 24px 20px;
+    width: 95%;
+  }
+  
+  .admin-tab-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  
+  .item-list-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .item-list-row .row-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+

@@ -19,7 +19,7 @@
         <div *ngFor="let service of categoryServices" class="service-item-card glass animate-fade-up">
           <div class="service-header-row">
             <h4>{{ service.name }}</h4>
-            <span class="service-price">${{ service.price }}</span>
+            <span class="service-price">₹{{ service.price }}</span>
           </div>
           <p class="service-meta">⏱️ {{ service.durationMinutes }} mins</p>
           <button 
@@ -43,7 +43,7 @@
           <p><strong>Appointment ID:</strong> <span class="gold-text">#{{ confirmedAppointment?.id }}</span></p>
           <p><strong>Stylist:</strong> {{ confirmedAppointment?.stylist?.name }}</p>
           <p><strong>Time Slot:</strong> {{ formatDateTime(confirmedAppointment?.startTime) }}</p>
-          <p><strong>Total Price:</strong> <span class="gold-text">${{ confirmedAppointment?.totalPrice }}</span></p>
+          <p><strong>Total Price:</strong> <span class="gold-text">₹{{ confirmedAppointment?.totalPrice }}</span></p>
         </div>
         <button (click)="resetBookingFlow()" class="btn btn-primary btn-sm">Book Another Appointment</button>
       </div>
@@ -66,7 +66,7 @@
                 <span class="cart-item-time">⏱️ {{ item.durationMinutes }} mins</span>
               </div>
               <div class="cart-item-right">
-                <span class="cart-item-price">${{ item.price }}</span>
+                <span class="cart-item-price">₹{{ item.price }}</span>
                 <button (click)="removeServiceFromCart(item.id)" class="btn-remove" title="Remove">&times;</button>
               </div>
             </div>
@@ -76,7 +76,7 @@
           <div class="cart-totals">
             <div class="total-row">
               <span>Total Price:</span>
-              <span class="total-val">${{ cartTotalPrice() }}</span>
+              <span class="total-val">₹{{ cartTotalPrice() }}</span>
             </div>
             <div class="total-row">
               <span>Total Duration:</span>
@@ -91,7 +91,7 @@
               <div *ngFor="let rec of recommendations" class="recommend-card">
                 <div>
                   <span class="rec-name">{{ rec.name }}</span>
-                  <span class="rec-meta">${{ rec.price }} &bull; {{ rec.durationMinutes }}m</span>
+                  <span class="rec-meta">₹{{ rec.price }} &bull; {{ rec.durationMinutes }}m</span>
                 </div>
                 <button (click)="addServiceToCart(rec)" class="btn btn-secondary btn-sm btn-rec-add">+ Add</button>
               </div>
@@ -222,7 +222,7 @@
   <div *ngIf="cartServices().length > 0 && !bookingSuccess" class="mobile-cart-bar glass animate-fade-up">
     <div class="mobile-cart-info">
       <span class="mobile-cart-badge">🛒 {{ cartServices().length }}</span>
-      <span class="mobile-cart-price">${{ cartTotalPrice() }}</span>
+      <span class="mobile-cart-price">₹{{ cartTotalPrice() }}</span>
     </div>
     <button (click)="scrollToScheduler()" class="btn btn-primary btn-sm mobile-cart-btn">
       Book Slot ➔
@@ -236,7 +236,8 @@
       You have no active or historical bookings.
     </div>
 
-    <div *ngIf="myBookings.length > 0" class="admin-table-container animate-fade-in">
+    <!-- Desktop Table View (Hidden on mobile) -->
+    <div *ngIf="myBookings.length > 0" class="admin-table-container desktop-bookings-table animate-fade-in">
       <table class="admin-table">
         <thead>
           <tr>
@@ -255,7 +256,7 @@
             <td>{{ formatDateTime(b.startTime, 'dateOnly') }}</td>
             <td>{{ formatDateTime(b.startTime, 'timeOnly') }} - {{ formatDateTime(b.endTime, 'timeOnly') }}</td>
             <td>{{ b.stylist.name }}</td>
-            <td class="gold-text-bold">${{ b.totalPrice }}</td>
+            <td class="gold-text-bold">₹{{ b.totalPrice }}</td>
             <td>
               <span class="badge" [class.badge-confirmed]="b.status === 'CONFIRMED'" [class.badge-pending]="b.status === 'PENDING'" [class.badge-cancelled]="b.status === 'CANCELLED'">
                 {{ b.status }}
@@ -272,6 +273,41 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- Mobile Card View (Hidden on desktop) -->
+    <div *ngIf="myBookings.length > 0" class="mobile-bookings-cards animate-fade-in">
+      <div *ngFor="let b of myBookings" class="mobile-booking-card glass">
+        <div class="card-header-row">
+          <span class="booking-id-tag">Appointment <span class="gold-text">#{{ b.id }}</span></span>
+          <span class="badge" [class.badge-confirmed]="b.status === 'CONFIRMED'" [class.badge-pending]="b.status === 'PENDING'" [class.badge-cancelled]="b.status === 'CANCELLED'">
+            {{ b.status }}
+          </span>
+        </div>
+        <div class="card-body-details">
+          <div class="detail-row">
+            <span class="detail-label">Date:</span>
+            <span class="detail-value">{{ formatDateTime(b.startTime, 'dateOnly') }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Time Slot:</span>
+            <span class="detail-value">{{ formatDateTime(b.startTime, 'timeOnly') }} - {{ formatDateTime(b.endTime, 'timeOnly') }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Stylist:</span>
+            <span class="detail-value">{{ b.stylist.name }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Price:</span>
+            <span class="gold-text-bold">₹{{ b.totalPrice }}</span>
+          </div>
+        </div>
+        <div *ngIf="b.status === 'CONFIRMED' && isUpcoming(b.startTime)" class="card-actions-row">
+          <button (click)="cancelBooking(b.id)" class="btn btn-danger btn-sm w-100 btn-cancel-booking-card">
+            Cancel Booking
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

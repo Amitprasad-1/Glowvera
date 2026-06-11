@@ -142,7 +142,7 @@ export class AdminComponent implements OnInit {
   }
 
   getServicesSummary(appt: any): string {
-    return appt.totalPrice ? `Booking ($${appt.totalPrice})` : 'Booking';
+    return appt.totalPrice ? `Booking (₹${appt.totalPrice})` : 'Booking';
   }
 
   onViewAppointment(appt: any) {

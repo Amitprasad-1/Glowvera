@@ -16,19 +16,19 @@ INSERT INTO categories (id, name) VALUES
 -- Insert services (Unisex)
 INSERT INTO services (id, category_id, name, price, duration_minutes) VALUES 
 -- Hair Care (Cat 1)
-(1, 1, 'Unisex Haircut & Styling', 35.00, 45),
-(2, 1, 'Luxury Hair Spa & Deep Conditioning', 50.00, 60),
-(3, 1, 'Professional Hair Coloring', 90.00, 120),
-(4, 1, 'Hair Blowout & Styling', 25.00, 30),
+(1, 1, 'Unisex Haircut & Styling', 800.00, 45),
+(2, 1, 'Luxury Hair Spa & Deep Conditioning', 1500.00, 60),
+(3, 1, 'Professional Hair Coloring', 4000.00, 120),
+(4, 1, 'Hair Blowout & Styling', 600.00, 30),
 -- Beard & Grooming (Cat 2)
-(5, 2, 'Classic Beard Trim & Razor Styling', 20.00, 30),
-(6, 2, 'Hot Towel Royal Shave', 30.00, 45),
+(5, 2, 'Classic Beard Trim & Razor Styling', 400.00, 30),
+(6, 2, 'Hot Towel Royal Shave', 500.00, 45),
 -- Spa & Massage (Cat 3)
-(7, 3, 'Swedish Deep Tissue Massage', 80.00, 60),
-(8, 3, 'Hot Stone Relaxing Therapy', 95.00, 90),
+(7, 3, 'Swedish Deep Tissue Massage', 2500.00, 60),
+(8, 3, 'Hot Stone Relaxing Therapy', 3500.00, 90),
 -- Skin & Facial (Cat 4)
-(9, 4, 'Charcoal Deep Cleansing Facial', 45.00, 45),
-(10, 4, 'Luxury Anti-Aging Facial', 75.00, 60);
+(9, 4, 'Charcoal Deep Cleansing Facial', 1500.00, 45),
+(10, 4, 'Luxury Anti-Aging Facial', 2500.00, 60);
 
 -- Insert stylists with schedules (Format: Start, End, BreakStart, BreakEnd)
 INSERT INTO stylists (id, name, is_active, working_start, working_end, break_start, break_end) VALUES 

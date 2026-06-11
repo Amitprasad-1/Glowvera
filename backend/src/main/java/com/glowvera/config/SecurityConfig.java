@@ -38,8 +38,8 @@ public class SecurityConfig {
                 // Auth endpoints are public
                 .requestMatchers("/api/auth/**").permitAll()
                 // Fetching services, stylists, categories and slots is public
-                .requestMatchers("/api/services/**").permitAll()
-                .requestMatchers("/api/stylists/**").permitAll()
+                .requestMatchers("/api/services", "/api/services/**").permitAll()
+                .requestMatchers("/api/stylists", "/api/stylists/**").permitAll()
                 .requestMatchers("/api/appointments/slots").permitAll()
                 // Admin dashboard actions
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")

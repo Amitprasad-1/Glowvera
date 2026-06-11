@@ -10,8 +10,18 @@ import { AuthService } from './services/auth.service';
 })
 export class App {
   public auth = inject(AuthService);
+  mobileMenuOpen = false;
+
+  toggleMobileMenu() {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
+
+  closeMobileMenu() {
+    this.mobileMenuOpen = false;
+  }
 
   logout() {
     this.auth.logout();
+    this.closeMobileMenu();
   }
 }

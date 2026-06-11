@@ -66,7 +66,7 @@ public class ReminderCronService {
                 log.info("[EMAIL NOTIFICATION SIMULATION] Sent to client email:");
                 log.info("    To: <{}>", clientEmail);
                 log.info("    Subject: Upcoming Appointment Reminder - Glowvera Unisex Salon");
-                log.info("    Body: Hello {},\n\nThis is a reminder of your salon booking scheduled for tomorrow, {} at {}.\nStylist: {}\nTotal Price: ${}\n\nWe look forward to giving you your best look!\n\nWarm regards,\nThe Glowvera Team",
+                log.info("    Body: Hello {},\n\nThis is a reminder of your salon booking scheduled for tomorrow, {} at {}.\nStylist: {}\nTotal Price: ₹{}\n\nWe look forward to giving you your best look!\n\nWarm regards,\nThe Glowvera Team",
                          clientName, date.toString(), appointmentTime, stylistName, appt.getTotalPrice());
                 log.info("------------------------------------------------------------------");
                 

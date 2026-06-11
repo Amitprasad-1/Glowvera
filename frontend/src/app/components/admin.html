@@ -72,7 +72,7 @@
           <p><strong>Client:</strong> {{ selectedAppointment.user.name }} ({{ selectedAppointment.user.email }})</p>
           <p><strong>Stylist:</strong> {{ selectedAppointment.stylist.name }}</p>
           <p><strong>Scheduled Time:</strong> {{ formatDateTime(selectedAppointment.startTime) }} to {{ formatDateTime(selectedAppointment.endTime) }}</p>
-          <p><strong>Total Pricing:</strong> <span class="gold-text">${{ selectedAppointment.totalPrice }}</span></p>
+          <p><strong>Total Pricing:</strong> <span class="gold-text">₹{{ selectedAppointment.totalPrice }}</span></p>
           <p><strong>Status:</strong> <span class="badge badge-confirmed">{{ selectedAppointment.status }}</span></p>
         </div>
         <div class="modal-actions">
@@ -143,7 +143,7 @@
                   [checked]="isStylistQualifiedFor(s.id)"
                   (change)="toggleStylistServiceSkill(s.id)"
                   class="checkbox-input">
-                <span class="checkbox-text">{{ s.name }} (${{ s.price }})</span>
+                <span class="checkbox-text">{{ s.name }} (₹{{ s.price }})</span>
               </label>
             </div>
           </div>
@@ -174,7 +174,7 @@
           <div *ngFor="let s of servicesPage?.content" class="item-list-row">
             <div>
               <strong>{{ s.name }}</strong>
-              <span class="schedule-sub">${{ s.price }} &bull; ⏱️ {{ s.durationMinutes }} mins &bull; [{{ s.category.name }}]</span>
+              <span class="schedule-sub">₹{{ s.price }} &bull; ⏱️ {{ s.durationMinutes }} mins &bull; [{{ s.category.name }}]</span>
             </div>
             <div class="row-actions">
               <button (click)="onEditService(s)" class="btn btn-secondary btn-sm">Edit</button>
@@ -202,7 +202,7 @@
 
           <div class="form-row">
             <div class="form-group col">
-              <label>Price ($)</label>
+              <label>Price (₹)</label>
               <input type="number" [(ngModel)]="serviceForm.price" name="price" required class="form-control">
             </div>
             <div class="form-group col">

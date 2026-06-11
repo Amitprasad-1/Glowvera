@@ -59,10 +59,17 @@ export class BookingComponent implements OnInit, OnDestroy {
   // History list
   myBookings: any[] = [];
 
+  getLocalYYYYMMDD(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   ngOnInit() {
     // Set date minimum to today
     const today = new Date();
-    this.todayString = today.toISOString().split('T')[0];
+    this.todayString = this.getLocalYYYYMMDD(today);
 
     this.generateBookingDays();
     this.loadCategories();
@@ -77,7 +84,7 @@ export class BookingComponent implements OnInit, OnDestroy {
     for (let i = 0; i < 7; i++) {
       const d = new Date();
       d.setDate(d.getDate() + i);
-      const dateString = d.toISOString().split('T')[0];
+      const dateString = this.getLocalYYYYMMDD(d);
       const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
       const dayNum = d.getDate().toString();
       const month = d.toLocaleDateString('en-US', { month: 'short' });

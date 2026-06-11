@@ -1,11 +1,11 @@
 /* Hero styling */
 .hero-section {
   position: relative;
-  min-height: 85vh;
+  min-height: 65vh;
   display: flex;
   align-items: center;
   overflow: hidden;
-  padding: 60px 0;
+  padding: 40px 0;
   background-color: var(--bg-dark);
 }
 
