@@ -64,7 +64,7 @@
 .timeline-header-row {
   display: flex;
   background-color: var(--bg-darker);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 2px solid rgba(245, 158, 11, 0.3);
   min-width: 850px;
 }
 
@@ -92,15 +92,41 @@
   flex-direction: column;
   justify-content: center;
   gap: 4px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: default;
 }
 .stylist-col-header:last-child {
   border-right: none;
+}
+.stylist-col-header::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--gold-gradient);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.stylist-col-header:hover {
+  background-color: rgba(245, 158, 11, 0.05);
+  box-shadow: inset 0 0 20px rgba(245, 158, 11, 0.08);
+}
+.stylist-col-header:hover::after {
+  opacity: 1;
 }
 .stylist-col-header strong {
   font-size: 15px;
   color: var(--text-primary);
   font-family: var(--font-title);
   font-weight: 700;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+.stylist-col-header:hover strong {
+  color: var(--gold-primary);
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
 }
 .header-hours {
   font-size: 11px;
