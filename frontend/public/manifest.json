@@ -1,0 +1,21 @@
+{
+  "short_name": "Glowvera",
+  "name": "Glowvera - Premium Unisex Salon & Spa",
+  "icons": [
+    {
+      "src": "/glowvera_logo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/glowvera_logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/#/home",
+  "background_color": "#040406",
+  "theme_color": "#0a0a0f",
+  "display": "standalone",
+  "orientation": "portrait"
+}

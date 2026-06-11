@@ -56,6 +56,12 @@ export class BookingComponent implements OnInit, OnDestroy {
   bookingSuccess = false;
   confirmedAppointment: any = null;
 
+  // Payment gateway simulation properties
+  showPaymentModal = false;
+  paymentProcessing = false;
+  paymentData = { cardNumber: '', cardName: '', expiry: '', cvv: '' };
+  paymentError = '';
+
   // History list
   myBookings: any[] = [];
 
@@ -281,28 +287,63 @@ export class BookingComponent implements OnInit, OnDestroy {
     }
   }
 
-  onConfirmBooking() {
+  initiatePayment() {
+    if (!this.selectedSlot || !this.selectedStylistId) return;
+    this.showPaymentModal = true;
+    this.paymentError = '';
+    this.paymentProcessing = false;
+    this.paymentData = { cardNumber: '', cardName: '', expiry: '', cvv: '' };
+  }
+
+  processSimulatedPayment() {
     if (!this.selectedSlot || !this.selectedStylistId) return;
 
-    this.bookingInProgress = true;
-    this.holdError = '';
-    const serviceIds = this.cartServices().map(s => s.id);
+    // Basic client-side validation checks
+    const cardNumClean = this.paymentData.cardNumber.replace(/\s+/g, '');
+    if (!/^\d{13,19}$/.test(cardNumClean)) {
+      this.paymentError = 'Invalid card number format. Expected 13 to 19 digits.';
+      return;
+    }
+    if (!/^(0[1-9]|1[0-2])\/[0-9]{2}$/.test(this.paymentData.expiry)) {
+      this.paymentError = 'Invalid expiry date format. Expected MM/YY.';
+      return;
+    }
+    if (!/^\d{3,4}$/.test(this.paymentData.cvv)) {
+      this.paymentError = 'Invalid CVV. Expected 3 or 4 digits.';
+      return;
+    }
+    if (!this.paymentData.cardName.trim()) {
+      this.paymentError = 'Cardholder name is required.';
+      return;
+    }
 
-    this.api.bookAppointment(this.selectedStylistId, serviceIds, this.selectedSlot).subscribe({
-      next: (appt) => {
-        this.bookingInProgress = false;
-        this.confirmedAppointment = appt;
-        this.bookingSuccess = true;
-        this.cart.clear();
-        this.clearHoldTimer();
-        this.isHoldActive = false;
-        this.loadMyBookings();
-      },
-      error: (err) => {
-        this.bookingInProgress = false;
-        this.holdError = err.error?.message || 'A concurrency conflict occurred. The slot was booked by someone else.';
-      }
-    });
+    this.paymentProcessing = true;
+    this.paymentError = '';
+
+    // Simulate merchant processing connection
+    setTimeout(() => {
+      this.bookingInProgress = true;
+      const serviceIds = this.cartServices().map(s => s.id);
+      
+      this.api.bookAppointment(this.selectedStylistId!, serviceIds, this.selectedSlot!).subscribe({
+        next: (appt) => {
+          this.bookingInProgress = false;
+          this.paymentProcessing = false;
+          this.showPaymentModal = false;
+          this.confirmedAppointment = appt;
+          this.bookingSuccess = true;
+          this.cart.clear();
+          this.clearHoldTimer();
+          this.isHoldActive = false;
+          this.loadMyBookings();
+        },
+        error: (err) => {
+          this.bookingInProgress = false;
+          this.paymentProcessing = false;
+          this.paymentError = err.error?.message || 'Transaction declined. Slot booking concurrency failure.';
+        }
+      });
+    }, 1500);
   }
 
   cancelBooking(id: number) {

@@ -857,3 +857,94 @@
   }
 }
 
+/* Modal Popup & Payment Simulation Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 36px;
+  border-radius: 20px;
+  box-shadow: var(--shadow-dark), 0 0 35px rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--glass-border);
+}
+
+.modal-card h3 {
+  font-size: 24px;
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.modal-hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 20px 0;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.total-summary-card {
+  background: rgba(245, 158, 11, 0.05);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-title);
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.py-24 {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.payment-loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(245, 158, 11, 0.15);
+  border-top-color: var(--gold-primary);
+  border-radius: 50%;
+  margin: 0 auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+

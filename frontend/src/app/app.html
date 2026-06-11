@@ -11,6 +11,10 @@
       <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Home</a>
       <a routerLink="/booking" routerLinkActive="active" class="nav-link">Book Now</a>
       
+      @if (showInstallBtn) {
+        <button (click)="installPwa()" class="btn btn-secondary btn-sm install-app-btn">📲 Install App</button>
+      }
+      
       @if (auth.isAdmin()) {
         <a routerLink="/admin" routerLinkActive="active" class="nav-link admin-link">💎 Admin Dashboard</a>
       }
@@ -46,6 +50,10 @@
         
         @if (auth.isAdmin()) {
           <a routerLink="/admin" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link mobile-admin-link">💎 Admin Dashboard</a>
+        }
+        
+        @if (showInstallBtn) {
+          <button (click)="installPwa(); closeMobileMenu()" class="btn btn-secondary w-100 install-app-btn" style="margin-top: 10px;">📲 Install App</button>
         }
         
         <div class="mobile-nav-divider"></div>

@@ -370,4 +370,30 @@
   }
 }
 
+/* PWA Install Button */
+.install-app-btn {
+  background: var(--gold-gradient) !important;
+  color: var(--bg-darker) !important;
+  border: none !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  animation: installGlow 2.5s infinite alternate;
+}
+
+.install-app-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4) !important;
+  filter: brightness(1.1);
+}
+
+@keyframes installGlow {
+  0% {
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+  }
+  100% {
+    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.55), 0 0 10px rgba(245, 158, 11, 0.2);
+  }
+}
+
 
