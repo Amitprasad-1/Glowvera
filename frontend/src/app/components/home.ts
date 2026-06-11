@@ -74,6 +74,14 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  scrollToCategory(categoryId: number) {
+    this.selectCategory(categoryId);
+    const element = document.getElementById('services-preview');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
   addToBooking(service: ServiceItem) {
     this.cart.addService(service);
     this.router.navigate(['/booking']);
