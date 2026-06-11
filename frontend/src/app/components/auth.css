@@ -71,3 +71,64 @@
 .w-100 {
   width: 100%;
 }
+
+/* Password visibility toggle and forgot link styles */
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-input {
+  padding-right: 48px !important;
+}
+
+.btn-password-toggle {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: var(--gold-primary);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  z-index: 10;
+}
+.btn-password-toggle:hover {
+  transform: scale(1.1);
+  opacity: 0.9;
+}
+.btn-password-toggle:active {
+  transform: scale(0.95);
+}
+
+.password-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.password-label-row label {
+  margin-bottom: 0 !important;
+}
+
+.forgot-password-link {
+  font-size: 12px;
+  color: var(--gold-primary);
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: var(--font-title);
+  letter-spacing: 0.02em;
+  transition: all 0.2s ease;
+}
+.forgot-password-link:hover {
+  text-decoration: underline;
+  color: var(--text-primary);
+}
+
