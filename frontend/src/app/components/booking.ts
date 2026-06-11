@@ -346,6 +346,30 @@ export class BookingComponent implements OnInit, OnDestroy {
     }, 1500);
   }
 
+  confirmPayAfterService() {
+    if (!this.selectedSlot || !this.selectedStylistId) return;
+
+    this.bookingInProgress = true;
+    this.holdError = '';
+    const serviceIds = this.cartServices().map(s => s.id);
+
+    this.api.bookAppointment(this.selectedStylistId!, serviceIds, this.selectedSlot!).subscribe({
+      next: (appt) => {
+        this.bookingInProgress = false;
+        this.confirmedAppointment = appt;
+        this.bookingSuccess = true;
+        this.cart.clear();
+        this.clearHoldTimer();
+        this.isHoldActive = false;
+        this.loadMyBookings();
+      },
+      error: (err) => {
+        this.bookingInProgress = false;
+        this.holdError = err.error?.message || 'Conflict. This slot was locked by another user.';
+      }
+    });
+  }
+
   cancelBooking(id: number) {
     if (confirm('Are you sure you want to cancel this appointment?')) {
       this.api.cancelAppointment(id).subscribe(() => {

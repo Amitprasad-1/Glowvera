@@ -204,12 +204,20 @@
                   {{ holdError }}
                 </div>
 
-                <button 
-                  (click)="initiatePayment()" 
-                  [disabled]="bookingInProgress"
-                  class="btn btn-primary w-100 btn-confirm-booking">
-                  Confirm Appointment
-                </button>
+                <div class="booking-confirm-buttons">
+                  <button 
+                    (click)="initiatePayment()" 
+                    [disabled]="bookingInProgress"
+                    class="btn btn-primary btn-confirm-pay-online">
+                    💳 Pay Online
+                  </button>
+                  <button 
+                    (click)="confirmPayAfterService()" 
+                    [disabled]="bookingInProgress"
+                    class="btn btn-secondary btn-confirm-pay-later">
+                    🏠 Pay at Salon
+                  </button>
+                </div>
               </div>
             </div>
           </div>

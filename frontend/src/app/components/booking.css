@@ -947,4 +947,45 @@
   }
 }
 
+/* Pay Online / Pay at Salon Buttons styling */
+.booking-confirm-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.btn-confirm-pay-online,
+.btn-confirm-pay-later {
+  flex: 1;
+  border-radius: 20px !important;
+  font-size: 13px !important;
+  padding: 12px 16px !important;
+  justify-content: center;
+}
+
+.btn-confirm-pay-later {
+  border: 1px solid var(--border-hover) !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  color: var(--text-primary) !important;
+}
+
+.btn-confirm-pay-later:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: var(--gold-primary) !important;
+  color: var(--gold-primary) !important;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 576px) {
+  .booking-confirm-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .btn-confirm-pay-online,
+  .btn-confirm-pay-later {
+    width: 100%;
+  }
+}
+
 
