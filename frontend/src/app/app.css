@@ -106,30 +106,6 @@
   color: var(--gold-primary);
 }
 
-/* Admin link customizations */
-.admin-link {
-  border: 1px solid rgba(245, 158, 11, 0.25);
-  padding: 8px 16px;
-  border-radius: 20px;
-  color: var(--gold-primary);
-  background-color: rgba(245, 158, 11, 0.05);
-  transition: all 0.3s ease;
-}
-.admin-link::after {
-  display: none; /* Hide standard underline */
-}
-.admin-link:hover {
-  background-color: rgba(245, 158, 11, 0.12);
-  border-color: var(--gold-primary);
-  color: var(--text-primary);
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
-}
-.admin-link.active {
-  background: var(--gold-gradient) !important;
-  color: var(--bg-darker) !important;
-  border-color: transparent !important;
-  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4) !important;
-}
 
 /* Logout Button Hover State */
 .btn-logout:hover,
@@ -335,10 +311,6 @@
   background-color: rgba(245, 158, 11, 0.04);
 }
 
-.mobile-admin-link {
-  border: 1px dashed rgba(245, 158, 11, 0.25);
-  margin-top: 10px;
-}
 
 .mobile-nav-divider {
   height: 1px;

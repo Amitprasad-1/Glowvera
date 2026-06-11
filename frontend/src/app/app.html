@@ -13,7 +13,7 @@
       <a routerLink="/booking" routerLinkActive="active" class="nav-link">Book Now</a>
       
       @if (auth.isAdmin()) {
-        <a routerLink="/admin" routerLinkActive="active" class="nav-link admin-link">💎 Admin Dashboard</a>
+        <a routerLink="/admin" routerLinkActive="active" class="nav-link admin-link">Dashboard</a>
       }
     </nav>
 
@@ -53,7 +53,7 @@
         <a routerLink="/booking" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link">Book Now</a>
         
         @if (auth.isAdmin()) {
-          <a routerLink="/admin" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link mobile-admin-link">💎 Admin Dashboard</a>
+          <a routerLink="/admin" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link mobile-admin-link">Dashboard</a>
         }
         
         @if (showInstallBtn) {
