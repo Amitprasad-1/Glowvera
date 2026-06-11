@@ -603,3 +603,48 @@
     scroll-snap-align: unset;
   }
 }
+
+/* Category Card Custom Hover Glow Borders based on work */
+.category-card.cat-hair:hover {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.35) !important;
+}
+.category-card.cat-hair .cat-hover-bar {
+  background: linear-gradient(90deg, #38bdf8 0%, #0ea5e9 100%) !important;
+}
+.category-card.cat-hair:hover h3 {
+  color: #38bdf8 !important;
+}
+
+.category-card.cat-grooming:hover {
+  border-color: #fbbf24 !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(251, 191, 36, 0.35) !important;
+}
+.category-card.cat-grooming .cat-hover-bar {
+  background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%) !important;
+}
+.category-card.cat-grooming:hover h3 {
+  color: #fbbf24 !important;
+}
+
+.category-card.cat-skin:hover {
+  border-color: #f43f5e !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(244, 63, 94, 0.35) !important;
+}
+.category-card.cat-skin .cat-hover-bar {
+  background: linear-gradient(90deg, #fda4af 0%, #f43f5e 100%) !important;
+}
+.category-card.cat-skin:hover h3 {
+  color: #f43f5e !important;
+}
+
+.category-card.cat-spa:hover {
+  border-color: #4ade80 !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(74, 222, 128, 0.35) !important;
+}
+.category-card.cat-spa .cat-hover-bar {
+  background: linear-gradient(90deg, #4ade80 0%, #22c55e 100%) !important;
+}
+.category-card.cat-spa:hover h3 {
+  color: #4ade80 !important;
+}

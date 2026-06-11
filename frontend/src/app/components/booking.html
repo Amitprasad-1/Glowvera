@@ -16,7 +16,12 @@
       </div>
 
       <div class="services-list-grid">
-        <div *ngFor="let service of categoryServices" class="service-item-card glass animate-fade-up">
+        <div *ngFor="let service of categoryServices" 
+             class="service-item-card glass animate-fade-up"
+             [class.card-hair]="selectedCategoryId === 1"
+             [class.card-grooming]="selectedCategoryId === 2"
+             [class.card-skin]="selectedCategoryId === 4"
+             [class.card-spa]="selectedCategoryId === 3">
           <div class="service-header-row">
             <h4>{{ service.name }}</h4>
             <span class="service-price">₹{{ service.price }}</span>
@@ -285,7 +290,11 @@
 
     <!-- Mobile Card View (Hidden on desktop) -->
     <div *ngIf="myBookings.length > 0" class="mobile-bookings-cards animate-fade-in">
-      <div *ngFor="let b of myBookings" class="mobile-booking-card glass">
+      <div *ngFor="let b of myBookings" 
+           class="mobile-booking-card glass"
+           [class.glow-confirmed]="b.status === 'CONFIRMED'"
+           [class.glow-pending]="b.status === 'PENDING'"
+           [class.glow-cancelled]="b.status === 'CANCELLED'">
         <div class="card-header-row">
           <span class="booking-id-tag">Appointment <span class="gold-text">#{{ b.id }}</span></span>
           <span class="badge" [class.badge-confirmed]="b.status === 'CONFIRMED'" [class.badge-pending]="b.status === 'PENDING'" [class.badge-cancelled]="b.status === 'CANCELLED'">

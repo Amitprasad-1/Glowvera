@@ -988,4 +988,50 @@
   }
 }
 
+/* Service Item Cards Dynamic Category Hover Glows */
+.service-item-card.card-hair:hover {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 8px 20px rgba(56, 189, 248, 0.18) !important;
+}
+.service-item-card.card-grooming:hover {
+  border-color: #fbbf24 !important;
+  box-shadow: 0 8px 20px rgba(251, 191, 36, 0.18) !important;
+}
+.service-item-card.card-skin:hover {
+  border-color: #f43f5e !important;
+  box-shadow: 0 8px 20px rgba(244, 63, 94, 0.18) !important;
+}
+.service-item-card.card-spa:hover {
+  border-color: #4ade80 !important;
+  box-shadow: 0 8px 20px rgba(74, 222, 128, 0.18) !important;
+}
+
+/* Mobile Booking Cards Status Glow Borders */
+.mobile-booking-card.glow-confirmed {
+  border-color: rgba(16, 185, 129, 0.25) !important;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.08) !important;
+}
+.mobile-booking-card.glow-confirmed:hover {
+  border-color: var(--success-color) !important;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.22) !important;
+}
+
+.mobile-booking-card.glow-pending {
+  border-color: rgba(245, 158, 11, 0.25) !important;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.08) !important;
+}
+.mobile-booking-card.glow-pending:hover {
+  border-color: var(--pending-color) !important;
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.22) !important;
+}
+
+.mobile-booking-card.glow-cancelled {
+  border-color: rgba(239, 68, 68, 0.25) !important;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.08) !important;
+}
+.mobile-booking-card.glow-cancelled:hover {
+  border-color: var(--error-color) !important;
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.22) !important;
+}
+
 
