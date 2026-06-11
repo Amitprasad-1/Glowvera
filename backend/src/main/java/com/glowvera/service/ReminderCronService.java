@@ -5,6 +5,9 @@ import com.glowvera.entity.AppointmentStatus;
 import com.glowvera.repository.AppointmentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +22,14 @@ public class ReminderCronService {
 
     private static final Logger log = LoggerFactory.getLogger(ReminderCronService.class);
     private final AppointmentRepository appointmentRepository;
+    private final JavaMailSender mailSender;
 
-    public ReminderCronService(AppointmentRepository appointmentRepository) {
+    @Value("${spring.mail.username:}")
+    private String mailFrom;
+
+    public ReminderCronService(AppointmentRepository appointmentRepository, JavaMailSender mailSender) {
         this.appointmentRepository = appointmentRepository;
+        this.mailSender = mailSender;
     }
 
     /**
@@ -62,12 +70,32 @@ public class ReminderCronService {
                 log.info("    Message: Hi {}, this is a friendly reminder that you have an appointment booked tomorrow ({}) at {} with stylist {}. Please arrive 10 minutes early. To manage your booking, visit Glowvera! Text STOP to opt-out.", 
                          clientName, date.toString(), appointmentTime, stylistName);
                 
-                // Print Email simulation to logs
-                log.info("[EMAIL NOTIFICATION SIMULATION] Sent to client email:");
-                log.info("    To: <{}>", clientEmail);
-                log.info("    Subject: Upcoming Appointment Reminder - Glowvera Unisex Salon");
-                log.info("    Body: Hello {},\n\nThis is a reminder of your salon booking scheduled for tomorrow, {} at {}.\nStylist: {}\nTotal Price: ₹{}\n\nWe look forward to giving you your best look!\n\nWarm regards,\nThe Glowvera Team",
+                String bodyText = String.format("Hello %s,\n\nThis is a reminder of your salon booking scheduled for tomorrow, %s at %s.\nStylist: %s\nTotal Price: ₹%s\n\nWe look forward to giving you your best look!\n\nWarm regards,\nThe Glowvera Team",
                          clientName, date.toString(), appointmentTime, stylistName, appt.getTotalPrice());
+
+                try {
+                    // Check if SMTP is configured (non-empty username)
+                    if (mailSender != null && mailFrom != null && !mailFrom.trim().isEmpty()) {
+                        SimpleMailMessage message = new SimpleMailMessage();
+                        message.setFrom(mailFrom);
+                        message.setTo(clientEmail);
+                        message.setSubject("Upcoming Appointment Reminder - Glowvera Unisex Salon");
+                        message.setText(bodyText);
+                        mailSender.send(message);
+                        log.info("[EMAIL NOTIFICATION] Real email successfully sent to <{}>", clientEmail);
+                    } else {
+                        log.info("[EMAIL NOTIFICATION SIMULATION] Sent to client email:");
+                        log.info("    To: <{}>", clientEmail);
+                        log.info("    Subject: Upcoming Appointment Reminder - Glowvera Unisex Salon");
+                        log.info("    Body:\n{}", bodyText);
+                    }
+                } catch (Exception e) {
+                    log.error("[EMAIL ERROR] Failed to send real email to <{}>: {}", clientEmail, e.getMessage());
+                    log.info("[EMAIL FALLBACK SIMULATION] Sent to client email (failed sending):");
+                    log.info("    To: <{}>", clientEmail);
+                    log.info("    Subject: Upcoming Appointment Reminder - Glowvera Unisex Salon");
+                    log.info("    Body:\n{}", bodyText);
+                }
                 log.info("------------------------------------------------------------------");
                 
                 count++;
