@@ -32,9 +32,15 @@ public class Appointment {
     @Column(nullable = false)
     private AppointmentStatus status;
 
+    @Column(name = "payment_method")
+    private String paymentMethod;
+
+    @Column(name = "payment_status")
+    private String paymentStatus;
+
     public Appointment() {}
 
-    public Appointment(Long id, User user, Stylist stylist, LocalDateTime startTime, LocalDateTime endTime, BigDecimal totalPrice, AppointmentStatus status) {
+    public Appointment(Long id, User user, Stylist stylist, LocalDateTime startTime, LocalDateTime endTime, BigDecimal totalPrice, AppointmentStatus status, String paymentMethod, String paymentStatus) {
         this.id = id;
         this.user = user;
         this.stylist = stylist;
@@ -42,6 +48,8 @@ public class Appointment {
         this.endTime = endTime;
         this.totalPrice = totalPrice;
         this.status = status;
+        this.paymentMethod = paymentMethod;
+        this.paymentStatus = paymentStatus;
     }
 
     public static AppointmentBuilder builder() {
@@ -63,6 +71,10 @@ public class Appointment {
     public void setTotalPrice(BigDecimal totalPrice) { this.totalPrice = totalPrice; }
     public AppointmentStatus getStatus() { return status; }
     public void setStatus(AppointmentStatus status) { this.status = status; }
+    public String getPaymentMethod() { return paymentMethod; }
+    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    public String getPaymentStatus() { return paymentStatus; }
+    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
 
     public static class AppointmentBuilder {
         private Long id;
@@ -72,6 +84,8 @@ public class Appointment {
         private LocalDateTime endTime;
         private BigDecimal totalPrice;
         private AppointmentStatus status;
+        private String paymentMethod;
+        private String paymentStatus;
 
         public AppointmentBuilder id(Long id) { this.id = id; return this; }
         public AppointmentBuilder user(User user) { this.user = user; return this; }
@@ -80,8 +94,10 @@ public class Appointment {
         public AppointmentBuilder endTime(LocalDateTime endTime) { this.endTime = endTime; return this; }
         public AppointmentBuilder totalPrice(BigDecimal totalPrice) { this.totalPrice = totalPrice; return this; }
         public AppointmentBuilder status(AppointmentStatus status) { this.status = status; return this; }
+        public AppointmentBuilder paymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; return this; }
+        public AppointmentBuilder paymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; return this; }
         public Appointment build() {
-            return new Appointment(id, user, stylist, startTime, endTime, totalPrice, status);
+            return new Appointment(id, user, stylist, startTime, endTime, totalPrice, status, paymentMethod, paymentStatus);
         }
     }
 }

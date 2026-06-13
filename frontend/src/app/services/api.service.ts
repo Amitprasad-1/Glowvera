@@ -110,9 +110,14 @@ export class ApiService {
     return this.http.post<any>(`${this.baseUrl}/appointments/hold`, body, { headers: this.getHeaders() });
   }
 
-  bookAppointment(stylistId: number, serviceIds: number[], startTime: string): Observable<any> {
-    const body = { stylistId, serviceIds, startTime };
+  bookAppointment(stylistId: number, serviceIds: number[], startTime: string, paymentMethod?: string, paymentStatus?: string): Observable<any> {
+    const body = { stylistId, serviceIds, startTime, paymentMethod, paymentStatus };
     return this.http.post<any>(`${this.baseUrl}/appointments/book`, body, { headers: this.getHeaders() });
+  }
+
+  updateAppointmentStatus(id: number, status: string): Observable<any> {
+    let params = new HttpParams().set('status', status);
+    return this.http.put<any>(`${this.baseUrl}/admin/appointments/${id}/status`, {}, { headers: this.getHeaders(), params });
   }
 
   getMyAppointments(): Observable<any[]> {

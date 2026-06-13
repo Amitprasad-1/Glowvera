@@ -124,7 +124,7 @@ public class AppointmentService {
      * Confirms a booking with transaction concurrency controls.
      */
     @Transactional
-    public Appointment createAppointment(Long userId, Long stylistId, List<Long> serviceIds, LocalDateTime startTime) {
+    public Appointment createAppointment(Long userId, Long stylistId, List<Long> serviceIds, LocalDateTime startTime, String paymentMethod, String paymentStatus) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         Stylist stylist = stylistRepository.findById(stylistId)
@@ -168,6 +168,8 @@ public class AppointmentService {
                 .endTime(endTime)
                 .totalPrice(totalPricing)
                 .status(AppointmentStatus.CONFIRMED)
+                .paymentMethod(paymentMethod)
+                .paymentStatus(paymentStatus)
                 .build();
 
         Appointment saved = appointmentRepository.save(appointment);
@@ -176,6 +178,20 @@ public class AppointmentService {
         cacheService.releaseSlot(stylistId, startTime);
 
         return saved;
+    }
+
+    /**
+     * Update appointment status.
+     */
+    @Transactional
+    public Appointment updateStatus(Long appointmentId, AppointmentStatus status) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Appointment not found"));
+        appointment.setStatus(status);
+        if (status == AppointmentStatus.COMPLETED) {
+            appointment.setPaymentStatus("PAID");
+        }
+        return appointmentRepository.save(appointment);
     }
 
     /**

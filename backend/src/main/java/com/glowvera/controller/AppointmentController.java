@@ -96,7 +96,9 @@ public class AppointmentController {
                 user.getId(),
                 request.getStylistId(),
                 request.getServiceIds(),
-                request.getStartTime()
+                request.getStartTime(),
+                request.getPaymentMethod(),
+                request.getPaymentStatus()
         );
         return ResponseEntity.ok(appt);
     }
@@ -137,6 +139,14 @@ public class AppointmentController {
             @RequestParam(defaultValue = "15") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(appointmentRepository.findAllByOrderByStartTimeDesc(pageable));
+    }
+
+    // Admin: Update appointment status (Attendance track + Payment auto-update)
+    @PutMapping("/admin/appointments/{id}/status")
+    public ResponseEntity<Appointment> updateAppointmentStatus(
+            @PathVariable Long id,
+            @RequestParam com.glowvera.entity.AppointmentStatus status) {
+        return ResponseEntity.ok(appointmentService.updateStatus(id, status));
     }
 
     // Admin: Fetch daily timeline appointments for grid view

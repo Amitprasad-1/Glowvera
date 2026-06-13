@@ -194,6 +194,15 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  updateAppointmentStatus(id: number, status: string) {
+    if (confirm(`Are you sure you want to mark this booking as ${status}?`)) {
+      this.api.updateAppointmentStatus(id, status).subscribe(() => {
+        this.selectedAppointment = null;
+        this.loadTimelineData();
+      });
+    }
+  }
+
   // --- Stylist CRUD ---
   onEditStylist(stylist: any) {
     // Copy fields

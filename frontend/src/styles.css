@@ -455,6 +455,26 @@ input[type=number] {
   color: var(--success-color);
   border: 1px solid rgba(16, 185, 129, 0.2);
 }
+.badge-completed {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success-color);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+.badge-noshow {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error-color);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+.badge-paid {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success-color);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+.badge-unpaid {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--pending-color);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
 .badge-pending {
   background: rgba(245, 158, 11, 0.1);
   color: var(--pending-color);

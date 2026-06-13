@@ -331,7 +331,7 @@ export class BookingComponent implements OnInit, OnDestroy {
       this.bookingInProgress = true;
       const serviceIds = this.cartServices().map(s => s.id);
       
-      this.api.bookAppointment(this.selectedStylistId!, serviceIds, this.selectedSlot!).subscribe({
+      this.api.bookAppointment(this.selectedStylistId!, serviceIds, this.selectedSlot!, 'UPI', 'PAID').subscribe({
         next: (appt) => {
           this.bookingInProgress = false;
           this.paymentProcessing = false;
@@ -382,7 +382,7 @@ export class BookingComponent implements OnInit, OnDestroy {
       this.bookingInProgress = true;
       const serviceIds = this.cartServices().map(s => s.id);
       
-      this.api.bookAppointment(this.selectedStylistId!, serviceIds, this.selectedSlot!).subscribe({
+      this.api.bookAppointment(this.selectedStylistId!, serviceIds, this.selectedSlot!, 'CARD', 'PAID').subscribe({
         next: (appt) => {
           this.bookingInProgress = false;
           this.paymentProcessing = false;
@@ -410,7 +410,7 @@ export class BookingComponent implements OnInit, OnDestroy {
     this.holdError = '';
     const serviceIds = this.cartServices().map(s => s.id);
 
-    this.api.bookAppointment(this.selectedStylistId!, serviceIds, this.selectedSlot!).subscribe({
+    this.api.bookAppointment(this.selectedStylistId!, serviceIds, this.selectedSlot!, 'PAY_AT_SALON', 'UNPAID').subscribe({
       next: (appt) => {
         this.bookingInProgress = false;
         this.confirmedAppointment = appt;

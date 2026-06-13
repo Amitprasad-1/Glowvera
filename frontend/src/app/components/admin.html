@@ -77,6 +77,8 @@
     <!-- View Appointment Modal Info Details -->
     <div *ngIf="selectedAppointment" class="modal-overlay animate-fade-in">
       <div class="modal-card glass">
+        <button type="button" (click)="selectedAppointment = null" class="modal-close-btn" aria-label="Close modal">&times;</button>
+        
         <h3>Appointment #{{ selectedAppointment.id }}</h3>
         <hr class="modal-hr">
         <div class="modal-body">
@@ -84,11 +86,51 @@
           <p><strong>Stylist:</strong> {{ selectedAppointment.stylist.name }}</p>
           <p><strong>Scheduled Time:</strong> {{ formatDateTime(selectedAppointment.startTime) }} to {{ formatDateTime(selectedAppointment.endTime) }}</p>
           <p><strong>Total Pricing:</strong> <span class="gold-text">₹{{ selectedAppointment.totalPrice }}</span></p>
-          <p><strong>Status:</strong> <span class="badge badge-confirmed">{{ selectedAppointment.status }}</span></p>
+          <p>
+            <strong>Payment Method:</strong> 
+            <span class="badge" [class.badge-admin]="selectedAppointment.paymentMethod" [class.badge-pending]="!selectedAppointment.paymentMethod">
+              {{ selectedAppointment.paymentMethod || 'PAY_AT_SALON' }}
+            </span>
+          </p>
+          <p>
+            <strong>Payment Status:</strong> 
+            <span class="badge" [class.badge-paid]="selectedAppointment.paymentStatus === 'PAID'" [class.badge-unpaid]="selectedAppointment.paymentStatus !== 'PAID'">
+              {{ selectedAppointment.paymentStatus || 'UNPAID' }}
+            </span>
+          </p>
+          <p>
+            <strong>Status:</strong> 
+            <span class="badge" 
+                  [class.badge-confirmed]="selectedAppointment.status === 'CONFIRMED'" 
+                  [class.badge-completed]="selectedAppointment.status === 'COMPLETED'" 
+                  [class.badge-noshow]="selectedAppointment.status === 'NO_SHOW'" 
+                  [class.badge-cancelled]="selectedAppointment.status === 'CANCELLED'">
+              {{ selectedAppointment.status }}
+            </span>
+          </p>
         </div>
-        <div class="modal-actions">
-          <button (click)="cancelAppointment(selectedAppointment.id)" class="btn btn-danger btn-sm">Cancel Booking</button>
-          <button (click)="selectedAppointment = null" class="btn btn-secondary btn-sm">Close</button>
+        <div class="modal-actions" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 24px;">
+          <!-- Active options when status is CONFIRMED -->
+          <ng-container *ngIf="selectedAppointment.status === 'CONFIRMED'">
+            <button (click)="updateAppointmentStatus(selectedAppointment.id, 'COMPLETED')" class="btn btn-primary btn-sm" style="background: var(--success-color); color: white; box-shadow: none;">
+              ✓ Came (Completed)
+            </button>
+            <button (click)="updateAppointmentStatus(selectedAppointment.id, 'NO_SHOW')" class="btn btn-primary btn-sm" style="background: #e11d48; color: white; box-shadow: none;">
+              ✗ No-Show
+            </button>
+            <button (click)="cancelAppointment(selectedAppointment.id)" class="btn btn-danger btn-sm">
+              Cancel Booking
+            </button>
+          </ng-container>
+
+          <!-- Revert option if state is finalized (COMPLETED/NO_SHOW/CANCELLED) -->
+          <ng-container *ngIf="selectedAppointment.status === 'CANCELLED' || selectedAppointment.status === 'NO_SHOW' || selectedAppointment.status === 'COMPLETED'">
+            <button (click)="updateAppointmentStatus(selectedAppointment.id, 'CONFIRMED')" class="btn btn-secondary btn-sm">
+              Revert to Confirmed
+            </button>
+          </ng-container>
+
+          <button (click)="selectedAppointment = null" class="btn btn-secondary btn-sm" style="margin-left: auto;">Close</button>
         </div>
       </div>
     </div>
