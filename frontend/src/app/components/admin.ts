@@ -496,7 +496,8 @@ export class AdminComponent implements OnInit {
     if (confirm(`Are you sure you want to mark this checkout booking as ${status}?`)) {
       this.api.updateAppointmentStatus(id, status).subscribe({
         next: (updatedAppt) => {
-          this.checkoutAppt = updatedAppt;
+          this.checkoutAppt = null;
+          this.checkoutSearchId = '';
           this.loadTimelineData();
           this.loadClients();
         },
@@ -511,7 +512,8 @@ export class AdminComponent implements OnInit {
     if (confirm('Are you sure you want to cancel this booking?')) {
       this.api.cancelAppointment(id).subscribe({
         next: () => {
-          this.searchCheckoutAppointment();
+          this.checkoutAppt = null;
+          this.checkoutSearchId = '';
           this.loadTimelineData();
           this.loadClients();
         },
