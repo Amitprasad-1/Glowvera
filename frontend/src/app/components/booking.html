@@ -334,6 +334,9 @@
   <!-- Simulated Secure Credit Card Payment Modal Overlay -->
   <div *ngIf="showPaymentModal" class="modal-overlay animate-fade-in">
     <div class="modal-card glass card">
+      <!-- Close button at top-right -->
+      <button type="button" (click)="showPaymentModal = false" class="modal-close-btn" aria-label="Close modal">&times;</button>
+
       <h3 style="display: flex; align-items: center; gap: 8px;">🔒 <span class="gold-text">Secure</span> Checkout</h3>
       <hr class="modal-hr">
 
