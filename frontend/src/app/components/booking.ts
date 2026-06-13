@@ -13,7 +13,10 @@ import { CartService, ServiceItem } from '../services/cart.service';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './booking.html',
-  styleUrl: './booking.css'
+  styleUrl: './booking.css',
+  host: {
+    '[class.modal-open]': 'showPaymentModal'
+  }
 })
 export class BookingComponent implements OnInit, OnDestroy {
   public api = inject(ApiService);
