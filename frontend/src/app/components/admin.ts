@@ -145,9 +145,26 @@ export class AdminComponent implements OnInit {
   selectedClientAppointments: any[] = [];
   clientSearchQuery: string = '';
 
+  expandedClientIds: Set<number> = new Set();
+  clientLatestAppointmentMap: { [clientId: number]: any } = {};
+  clientAppointmentsMap: { [clientId: number]: any[] } = {};
+
   loadClients() {
     this.api.getAdminClients().subscribe(data => {
       this.clientsList = data;
+      data.forEach(c => {
+        this.api.getClientAppointmentsAdmin(c.id).subscribe(appts => {
+          if (appts && appts.length > 0) {
+            const sortedDesc = [...appts].sort((a: any, b: any) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
+            this.clientLatestAppointmentMap[c.id] = sortedDesc[0];
+
+            this.clientAppointmentsMap[c.id] = [...appts].sort((a: any, b: any) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+          } else {
+            this.clientLatestAppointmentMap[c.id] = null;
+            this.clientAppointmentsMap[c.id] = [];
+          }
+        });
+      });
     });
   }
 
@@ -160,30 +177,45 @@ export class AdminComponent implements OnInit {
     );
   }
 
-  viewClientHistory(client: any) {
-    this.selectedClient = client;
-    this.api.getClientAppointmentsAdmin(client.id).subscribe(data => {
-      this.selectedClientAppointments = data;
+  isClientExpanded(clientId: number): boolean {
+    return this.expandedClientIds.has(clientId);
+  }
+
+  toggleClientExpanded(clientId: number) {
+    if (this.expandedClientIds.has(clientId)) {
+      this.expandedClientIds.delete(clientId);
+    } else {
+      this.expandedClientIds.add(clientId);
+    }
+  }
+
+  refreshClientAppointments(clientId: number) {
+    this.api.getClientAppointmentsAdmin(clientId).subscribe(appts => {
+      if (appts && appts.length > 0) {
+        const sortedDesc = [...appts].sort((a: any, b: any) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
+        this.clientLatestAppointmentMap[clientId] = sortedDesc[0];
+
+        this.clientAppointmentsMap[clientId] = [...appts].sort((a: any, b: any) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+      } else {
+        this.clientLatestAppointmentMap[clientId] = null;
+        this.clientAppointmentsMap[clientId] = [];
+      }
     });
   }
 
-  updateClientAppointmentStatus(id: number, status: string) {
+  updateClientAppointmentStatus(id: number, status: string, clientId: number) {
     if (confirm(`Are you sure you want to mark this booking as ${status}?`)) {
       this.api.updateAppointmentStatus(id, status).subscribe(() => {
-        if (this.selectedClient) {
-          this.viewClientHistory(this.selectedClient);
-        }
+        this.refreshClientAppointments(clientId);
         this.loadTimelineData();
       });
     }
   }
 
-  cancelClientAppointment(id: number) {
+  cancelClientAppointment(id: number, clientId: number) {
     if (confirm('Are you sure you want to cancel this booking as Admin?')) {
       this.api.cancelAppointment(id).subscribe(() => {
-        if (this.selectedClient) {
-          this.viewClientHistory(this.selectedClient);
-        }
+        this.refreshClientAppointments(clientId);
         this.loadTimelineData();
       });
     }

@@ -579,5 +579,47 @@
   }
 }
 
+/* Collapsible Row History Accordion */
+.expanded-row {
+  background-color: rgba(245, 158, 11, 0.03) !important;
+  box-shadow: inset 3px 0 0 var(--gold-primary);
+}
+
+.dropdown-drawer-row td {
+  padding: 0 !important;
+}
+
+.drawer-header-title {
+  font-family: var(--font-title);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.inner-history-table-wrapper {
+  margin-top: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  background-color: rgba(4, 4, 6, 0.4);
+}
+
+.inner-history-table th {
+  padding: 12px 16px !important;
+  font-size: 12px !important;
+  background-color: rgba(4, 4, 6, 0.7) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.inner-history-table td {
+  padding: 12px 16px !important;
+  font-size: 13px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02) !important;
+}
+
+.inner-history-table tr:hover td {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
 
 

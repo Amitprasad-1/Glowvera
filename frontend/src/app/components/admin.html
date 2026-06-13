@@ -322,120 +322,148 @@
       <input type="text" [(ngModel)]="clientSearchQuery" placeholder="Search by name or email..." class="form-control">
     </div>
 
-    <!-- Clients Directory Table -->
+    <!-- Clients Directory Table with Accordion Collapsible History -->
     <div class="admin-table-container animate-fade-in">
       <table class="admin-table">
         <thead>
           <tr>
-            <th>Client ID</th>
-            <th>Name</th>
-            <th>Email</th>
+            <th>Client Name</th>
+            <th>Latest Appt</th>
+            <th>Stylist</th>
+            <th>Total Bill</th>
+            <th>Payment Status</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let c of getFilteredClients()">
-            <td>#{{ c.id }}</td>
-            <td style="font-weight: 700;">{{ c.name }}</td>
-            <td>{{ c.email }}</td>
-            <td>
-              <button (click)="viewClientHistory(c)" class="btn btn-primary btn-sm" style="border-radius: 20px;">
-                🔎 View Booking History
-              </button>
-            </td>
-          </tr>
+          <ng-container *ngFor="let c of getFilteredClients()">
+            <!-- Main Client Summary Row -->
+            <tr [class.expanded-row]="isClientExpanded(c.id)">
+              <td>
+                <div style="font-weight: 700;">{{ c.name }}</div>
+                <div style="font-size: 11px; color: var(--text-muted);">{{ c.email }} &bull; ID #{{ c.id }}</div>
+              </td>
+              <td>
+                {{ clientLatestAppointmentMap[c.id]?.id ? '#' + clientLatestAppointmentMap[c.id].id : 'No Bookings' }}
+              </td>
+              <td>
+                {{ clientLatestAppointmentMap[c.id]?.stylist?.name || '-' }}
+              </td>
+              <td class="gold-text-bold">
+                {{ clientLatestAppointmentMap[c.id]?.totalPrice ? '₹' + clientLatestAppointmentMap[c.id].totalPrice : '-' }}
+              </td>
+              <td>
+                <ng-container *ngIf="clientLatestAppointmentMap[c.id]">
+                  <span style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600;">{{ clientLatestAppointmentMap[c.id].paymentMethod || 'PAY_AT_SALON' }}</span>
+                  <span class="badge" [class.badge-paid]="clientLatestAppointmentMap[c.id].paymentStatus === 'PAID'" [class.badge-unpaid]="clientLatestAppointmentMap[c.id].paymentStatus !== 'PAID'">
+                    {{ clientLatestAppointmentMap[c.id].paymentStatus || 'UNPAID' }}
+                  </span>
+                </ng-container>
+                <ng-container *ngIf="!clientLatestAppointmentMap[c.id]">-</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="clientLatestAppointmentMap[c.id]">
+                  <span class="badge" 
+                        [class.badge-confirmed]="clientLatestAppointmentMap[c.id].status === 'CONFIRMED'" 
+                        [class.badge-completed]="clientLatestAppointmentMap[c.id].status === 'COMPLETED'" 
+                        [class.badge-noshow]="clientLatestAppointmentMap[c.id].status === 'NO_SHOW'" 
+                        [class.badge-cancelled]="clientLatestAppointmentMap[c.id].status === 'CANCELLED'">
+                    {{ clientLatestAppointmentMap[c.id].status }}
+                  </span>
+                </ng-container>
+                <ng-container *ngIf="!clientLatestAppointmentMap[c.id]">-</ng-container>
+              </td>
+              <td>
+                <button (click)="toggleClientExpanded(c.id)" class="btn btn-secondary btn-sm" style="border-radius: 20px; display: flex; align-items: center; gap: 6px; padding: 6px 14px; font-size: 12px;">
+                  <span>{{ isClientExpanded(c.id) ? '▲ Close History' : '▼ View History (' + (clientAppointmentsMap[c.id]?.length || 0) + ')' }}</span>
+                </button>
+              </td>
+            </tr>
+
+            <!-- Expanded Drawer Row containing Chronological History -->
+            <tr *ngIf="isClientExpanded(c.id)" class="dropdown-drawer-row animate-fade-in">
+              <td colspan="7" style="background-color: rgba(4, 4, 6, 0.3); padding: 20px 24px; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+                <div class="drawer-header-title" style="margin-bottom: 12px; font-size: 14px; font-weight: 700; color: var(--gold-primary);">
+                  📜 Booking History records (Chronological order - Ascending)
+                </div>
+                <div class="admin-table-container inner-history-table-wrapper">
+                  <table class="admin-table inner-history-table">
+                    <thead>
+                      <tr>
+                        <th>Appt ID</th>
+                        <th>Date & Time</th>
+                        <th>Stylist</th>
+                        <th>Services</th>
+                        <th>Price</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let appt of clientAppointmentsMap[c.id]">
+                        <td>#{{ appt.id }}</td>
+                        <td>{{ formatDateTime(appt.startTime) }}</td>
+                        <td>{{ appt.stylist.name }}</td>
+                        <td>{{ getServicesSummary(appt) }}</td>
+                        <td class="gold-text-bold">₹{{ appt.totalPrice }}</td>
+                        <td>
+                          <span style="display: block; font-size: 11px; font-weight: 600; color: var(--text-muted);">{{ appt.paymentMethod || 'PAY_AT_SALON' }}</span>
+                          <span class="badge" [class.badge-paid]="appt.paymentStatus === 'PAID'" [class.badge-unpaid]="appt.paymentStatus !== 'PAID'">
+                            {{ appt.paymentStatus || 'UNPAID' }}
+                          </span>
+                        </td>
+                        <td>
+                          <span class="badge" 
+                                [class.badge-confirmed]="appt.status === 'CONFIRMED'" 
+                                [class.badge-completed]="appt.status === 'COMPLETED'" 
+                                [class.badge-noshow]="appt.status === 'NO_SHOW'" 
+                                [class.badge-cancelled]="appt.status === 'CANCELLED'">
+                            {{ appt.status }}
+                          </span>
+                        </td>
+                        <td>
+                          <div style="display: flex; gap: 4px;">
+                            <!-- Active options when status is CONFIRMED -->
+                            <ng-container *ngIf="appt.status === 'CONFIRMED'">
+                              <button (click)="updateClientAppointmentStatus(appt.id, 'COMPLETED', c.id)" class="btn btn-primary btn-sm" style="background: var(--success-color); color: white; box-shadow: none; padding: 4px 8px; font-size: 11px; border-radius: 12px;">
+                                ✓ Came
+                              </button>
+                              <button (click)="updateClientAppointmentStatus(appt.id, 'NO_SHOW', c.id)" class="btn btn-primary btn-sm" style="background: #e11d48; color: white; box-shadow: none; padding: 4px 8px; font-size: 11px; border-radius: 12px;">
+                                ✗ No-Show
+                              </button>
+                              <button (click)="cancelClientAppointment(appt.id, c.id)" class="btn btn-danger btn-sm" style="padding: 4px 8px; font-size: 11px; border-radius: 12px;">
+                                Cancel
+                              </button>
+                            </ng-container>
+                            <!-- Revert option if state is finalized -->
+                            <ng-container *ngIf="appt.status === 'CANCELLED' || appt.status === 'NO_SHOW' || appt.status === 'COMPLETED'">
+                              <button (click)="updateClientAppointmentStatus(appt.id, 'CONFIRMED', c.id)" class="btn btn-secondary btn-sm" style="padding: 4px 8px; font-size: 11px; border-radius: 12px;">
+                                Revert
+                              </button>
+                            </ng-container>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr *ngIf="clientAppointmentsMap[c.id].length === 0">
+                        <td colspan="8" class="text-center font-italic" style="padding: 24px; color: var(--text-muted);">
+                          No booking records found for this client.
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
           <tr *ngIf="getFilteredClients().length === 0">
-            <td colspan="4" class="text-center font-italic" style="padding: 24px; color: var(--text-muted);">
+            <td colspan="7" class="text-center font-italic" style="padding: 24px; color: var(--text-muted);">
               No clients found matching the query.
             </td>
           </tr>
         </tbody>
       </table>
-    </div>
-
-    <!-- Client History Detail Modal Overlay -->
-    <div *ngIf="selectedClient" class="modal-overlay animate-fade-in">
-      <div class="modal-card glass" style="max-width: 800px; width: 100%;">
-        <button type="button" (click)="selectedClient = null" class="modal-close-btn" aria-label="Close modal">&times;</button>
-        
-        <h3>Booking History: <span class="gold-text">{{ selectedClient.name }}</span></h3>
-        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">{{ selectedClient.email }}</p>
-        <hr class="modal-hr">
-
-        <div class="modal-body" style="max-height: 50vh; overflow-y: auto;">
-          <div class="admin-table-container">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Date & Time</th>
-                  <th>Stylist</th>
-                  <th>Services</th>
-                  <th>Price</th>
-                  <th>Payment</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let appt of selectedClientAppointments">
-                  <td>#{{ appt.id }}</td>
-                  <td>{{ formatDateTime(appt.startTime) }}</td>
-                  <td>{{ appt.stylist.name }}</td>
-                  <td>{{ getServicesSummary(appt) }}</td>
-                  <td class="gold-text-bold">₹{{ appt.totalPrice }}</td>
-                  <td>
-                    <span style="display: block; font-size: 11px; font-weight: 600; color: var(--text-muted);">{{ appt.paymentMethod || 'PAY_AT_SALON' }}</span>
-                    <span class="badge" [class.badge-paid]="appt.paymentStatus === 'PAID'" [class.badge-unpaid]="appt.paymentStatus !== 'PAID'">
-                      {{ appt.paymentStatus || 'UNPAID' }}
-                    </span>
-                  </td>
-                  <td>
-                    <span class="badge" 
-                          [class.badge-confirmed]="appt.status === 'CONFIRMED'" 
-                          [class.badge-completed]="appt.status === 'COMPLETED'" 
-                          [class.badge-noshow]="appt.status === 'NO_SHOW'" 
-                          [class.badge-cancelled]="appt.status === 'CANCELLED'">
-                      {{ appt.status }}
-                    </span>
-                  </td>
-                  <td>
-                    <div style="display: flex; gap: 4px;">
-                      <!-- Active options when status is CONFIRMED -->
-                      <ng-container *ngIf="appt.status === 'CONFIRMED'">
-                        <button (click)="updateClientAppointmentStatus(appt.id, 'COMPLETED')" class="btn btn-primary btn-sm" style="background: var(--success-color); color: white; box-shadow: none; padding: 4px 8px; font-size: 11px;">
-                          ✓ Came
-                        </button>
-                        <button (click)="updateClientAppointmentStatus(appt.id, 'NO_SHOW')" class="btn btn-primary btn-sm" style="background: #e11d48; color: white; box-shadow: none; padding: 4px 8px; font-size: 11px;">
-                          ✗ No-Show
-                        </button>
-                        <button (click)="cancelClientAppointment(appt.id)" class="btn btn-danger btn-sm" style="padding: 4px 8px; font-size: 11px;">
-                          Cancel
-                        </button>
-                      </ng-container>
-                      <!-- Revert option if state is finalized -->
-                      <ng-container *ngIf="appt.status === 'CANCELLED' || appt.status === 'NO_SHOW' || appt.status === 'COMPLETED'">
-                        <button (click)="updateClientAppointmentStatus(appt.id, 'CONFIRMED')" class="btn btn-secondary btn-sm" style="padding: 4px 8px; font-size: 11px;">
-                          Revert
-                        </button>
-                      </ng-container>
-                    </div>
-                  </td>
-                </tr>
-                <tr *ngIf="selectedClientAppointments.length === 0">
-                  <td colspan="8" class="text-center font-italic" style="padding: 24px; color: var(--text-muted);">
-                    No booking records found for this client.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="modal-actions" style="margin-top: 20px;">
-          <button (click)="selectedClient = null" class="btn btn-secondary btn-sm">Close</button>
-        </div>
-      </div>
     </div>
   </div>
 </div>
