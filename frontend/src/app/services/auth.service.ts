@@ -16,9 +16,16 @@ export interface User {
 export class AuthService {
   private get baseUrl(): string {
     const hostname = window.location.hostname;
-    if (hostname && hostname !== 'localhost' && hostname !== '127.0.0.1' && !hostname.includes('vercel.app')) {
+    // Cloud hosting check (e.g., Vercel deployment)
+    if (hostname && hostname.includes('vercel.app')) {
+      // NOTE: Replace this with your actual hosted Render/Railway backend URL once deployed
+      return 'https://glowvera-backend.onrender.com/api/auth';
+    }
+    // Local network check (e.g., physical phone connecting to PC IP)
+    if (hostname && hostname !== 'localhost' && hostname !== '127.0.0.1') {
       return `http://${hostname}:8080/api/auth`;
     }
+    // Local developer fallback
     return 'http://localhost:8080/api/auth';
   }
   
