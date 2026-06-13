@@ -1,6 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription, interval } from 'rxjs';
 import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
 
@@ -11,7 +12,7 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './admin.html',
   styleUrl: './admin.css'
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, OnDestroy {
   private api = inject(ApiService);
   public auth = inject(AuthService);
 
@@ -86,6 +87,7 @@ export class AdminComponent implements OnInit {
     this.loadTimelineData();
     this.loadServicesPage(0);
     this.loadClients();
+    this.startPolling();
   }
 
   // --- Date Navigation ---
@@ -521,6 +523,23 @@ export class AdminComponent implements OnInit {
           console.error(err);
         }
       });
+    }
+  }
+
+  private pollSubscription?: Subscription;
+
+  startPolling() {
+    this.pollSubscription = interval(10000).subscribe(() => {
+      this.loadTimelineData();
+      if (this.activeTab === 'clients') {
+        this.loadClients();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.pollSubscription) {
+      this.pollSubscription.unsubscribe();
     }
   }
 }
