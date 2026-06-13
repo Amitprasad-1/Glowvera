@@ -149,6 +149,18 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.updateStatus(id, status));
     }
 
+    // Admin: Fetch all clients
+    @GetMapping("/admin/clients")
+    public ResponseEntity<List<User>> getClients() {
+        return ResponseEntity.ok(userRepository.findByRole(com.glowvera.entity.Role.CLIENT));
+    }
+
+    // Admin: Fetch appointments for a specific client
+    @GetMapping("/admin/clients/{id}/appointments")
+    public ResponseEntity<List<Appointment>> getClientAppointmentsAdmin(@PathVariable Long id) {
+        return ResponseEntity.ok(appointmentService.getClientAppointments(id));
+    }
+
     // Admin: Fetch daily timeline appointments for grid view
     @GetMapping("/admin/appointments/timeline")
     public ResponseEntity<List<Appointment>> getAdminTimeline(

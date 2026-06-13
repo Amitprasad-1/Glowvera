@@ -141,6 +141,14 @@ export class ApiService {
     return this.http.get<any[]>(`${this.baseUrl}/admin/appointments/timeline`, { headers: this.getHeaders(), params });
   }
 
+  getAdminClients(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/admin/clients`, { headers: this.getHeaders() });
+  }
+
+  getClientAppointmentsAdmin(clientId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/admin/clients/${clientId}/appointments`, { headers: this.getHeaders() });
+  }
+
   triggerCronReminders(date?: string): Observable<any> {
     let params = new HttpParams();
     if (date) {

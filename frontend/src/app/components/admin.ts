@@ -15,7 +15,7 @@ export class AdminComponent implements OnInit {
   private api = inject(ApiService);
   public auth = inject(AuthService);
 
-  activeTab: 'timeline' | 'stylists' | 'services' | 'reminders' = 'timeline';
+  activeTab: 'timeline' | 'stylists' | 'services' | 'reminders' | 'clients' = 'timeline';
 
   // Shared Data
   categories: any[] = [];
@@ -79,6 +79,7 @@ export class AdminComponent implements OnInit {
     this.loadAllServicesForSelection();
     this.loadTimelineData();
     this.loadServicesPage(0);
+    this.loadClients();
   }
 
   // --- Date Navigation ---
@@ -136,6 +137,56 @@ export class AdminComponent implements OnInit {
     this.api.getServices('', page, 10).subscribe(data => {
       this.servicesPage = data;
     });
+  }
+
+  // --- Clients Tab Loaders & Handlers ---
+  clientsList: any[] = [];
+  selectedClient: any = null;
+  selectedClientAppointments: any[] = [];
+  clientSearchQuery: string = '';
+
+  loadClients() {
+    this.api.getAdminClients().subscribe(data => {
+      this.clientsList = data;
+    });
+  }
+
+  getFilteredClients(): any[] {
+    if (!this.clientSearchQuery.trim()) return this.clientsList;
+    const query = this.clientSearchQuery.toLowerCase();
+    return this.clientsList.filter(c => 
+      c.name.toLowerCase().includes(query) || 
+      c.email.toLowerCase().includes(query)
+    );
+  }
+
+  viewClientHistory(client: any) {
+    this.selectedClient = client;
+    this.api.getClientAppointmentsAdmin(client.id).subscribe(data => {
+      this.selectedClientAppointments = data;
+    });
+  }
+
+  updateClientAppointmentStatus(id: number, status: string) {
+    if (confirm(`Are you sure you want to mark this booking as ${status}?`)) {
+      this.api.updateAppointmentStatus(id, status).subscribe(() => {
+        if (this.selectedClient) {
+          this.viewClientHistory(this.selectedClient);
+        }
+        this.loadTimelineData();
+      });
+    }
+  }
+
+  cancelClientAppointment(id: number) {
+    if (confirm('Are you sure you want to cancel this booking as Admin?')) {
+      this.api.cancelAppointment(id).subscribe(() => {
+        if (this.selectedClient) {
+          this.viewClientHistory(this.selectedClient);
+        }
+        this.loadTimelineData();
+      });
+    }
   }
 
   // --- Timeline Calculations ---

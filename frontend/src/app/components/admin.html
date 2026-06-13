@@ -6,6 +6,9 @@
     <button (click)="activeTab = 'timeline'" [class.active]="activeTab === 'timeline'" class="admin-tab-btn">
       📅 Booking Timeline
     </button>
+    <button (click)="activeTab = 'clients'" [class.active]="activeTab === 'clients'" class="admin-tab-btn">
+      👥 Client Records
+    </button>
     <button (click)="activeTab = 'stylists'" [class.active]="activeTab === 'stylists'" class="admin-tab-btn">
       ✂️ Manage Stylists
     </button>
@@ -305,6 +308,131 @@
         {{ reminderResult.message }}
       </div>
       <small class="reminder-note">* View Spring Boot console logs to inspect detailed simulated SMS and Email logs.</small>
+    </div>
+  </div>
+
+  <!-- Content 5: Clients Records Tab -->
+  <div *ngIf="activeTab === 'clients'" class="clients-tab card animate-fade-in">
+    <h3>Client Directory & Booking Records</h3>
+    <p class="section-meta-text">Browse registered clients, search by name/email, and inspect client appointment histories.</p>
+    
+    <div class="form-group max-w-300" style="margin-bottom: 20px;">
+      <label>Search Clients</label>
+      <input type="text" [(ngModel)]="clientSearchQuery" placeholder="Search by name or email..." class="form-control">
+    </div>
+
+    <!-- Clients Directory Table -->
+    <div class="admin-table-container animate-fade-in">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Client ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of getFilteredClients()">
+            <td>#{{ c.id }}</td>
+            <td style="font-weight: 700;">{{ c.name }}</td>
+            <td>{{ c.email }}</td>
+            <td>
+              <button (click)="viewClientHistory(c)" class="btn btn-primary btn-sm" style="border-radius: 20px;">
+                🔎 View Booking History
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="getFilteredClients().length === 0">
+            <td colspan="4" class="text-center font-italic" style="padding: 24px; color: var(--text-muted);">
+              No clients found matching the query.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Client History Detail Modal Overlay -->
+    <div *ngIf="selectedClient" class="modal-overlay animate-fade-in">
+      <div class="modal-card glass" style="max-width: 800px; width: 100%;">
+        <button type="button" (click)="selectedClient = null" class="modal-close-btn" aria-label="Close modal">&times;</button>
+        
+        <h3>Booking History: <span class="gold-text">{{ selectedClient.name }}</span></h3>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">{{ selectedClient.email }}</p>
+        <hr class="modal-hr">
+
+        <div class="modal-body" style="max-height: 50vh; overflow-y: auto;">
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Date & Time</th>
+                  <th>Stylist</th>
+                  <th>Price</th>
+                  <th>Payment</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let appt of selectedClientAppointments">
+                  <td>#{{ appt.id }}</td>
+                  <td>{{ formatDateTime(appt.startTime) }}</td>
+                  <td>{{ appt.stylist.name }}</td>
+                  <td class="gold-text-bold">₹{{ appt.totalPrice }}</td>
+                  <td>
+                    <span style="display: block; font-size: 11px; font-weight: 600; color: var(--text-muted);">{{ appt.paymentMethod || 'PAY_AT_SALON' }}</span>
+                    <span class="badge" [class.badge-paid]="appt.paymentStatus === 'PAID'" [class.badge-unpaid]="appt.paymentStatus !== 'PAID'">
+                      {{ appt.paymentStatus || 'UNPAID' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge" 
+                          [class.badge-confirmed]="appt.status === 'CONFIRMED'" 
+                          [class.badge-completed]="appt.status === 'COMPLETED'" 
+                          [class.badge-noshow]="appt.status === 'NO_SHOW'" 
+                          [class.badge-cancelled]="appt.status === 'CANCELLED'">
+                      {{ appt.status }}
+                    </span>
+                  </td>
+                  <td>
+                    <div style="display: flex; gap: 4px;">
+                      <!-- Active options when status is CONFIRMED -->
+                      <ng-container *ngIf="appt.status === 'CONFIRMED'">
+                        <button (click)="updateClientAppointmentStatus(appt.id, 'COMPLETED')" class="btn btn-primary btn-sm" style="background: var(--success-color); color: white; box-shadow: none; padding: 4px 8px; font-size: 11px;">
+                          ✓ Came
+                        </button>
+                        <button (click)="updateClientAppointmentStatus(appt.id, 'NO_SHOW')" class="btn btn-primary btn-sm" style="background: #e11d48; color: white; box-shadow: none; padding: 4px 8px; font-size: 11px;">
+                          ✗ No-Show
+                        </button>
+                        <button (click)="cancelClientAppointment(appt.id)" class="btn btn-danger btn-sm" style="padding: 4px 8px; font-size: 11px;">
+                          Cancel
+                        </button>
+                      </ng-container>
+                      <!-- Revert option if state is finalized -->
+                      <ng-container *ngIf="appt.status === 'CANCELLED' || appt.status === 'NO_SHOW' || appt.status === 'COMPLETED'">
+                        <button (click)="updateClientAppointmentStatus(appt.id, 'CONFIRMED')" class="btn btn-secondary btn-sm" style="padding: 4px 8px; font-size: 11px;">
+                          Revert
+                        </button>
+                      </ng-container>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="selectedClientAppointments.length === 0">
+                  <td colspan="7" class="text-center font-italic" style="padding: 24px; color: var(--text-muted);">
+                    No booking records found for this client.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="modal-actions" style="margin-top: 20px;">
+          <button (click)="selectedClient = null" class="btn btn-secondary btn-sm">Close</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
