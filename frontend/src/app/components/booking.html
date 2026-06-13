@@ -347,21 +347,21 @@
         <p style="font-size: 12px; color: var(--text-muted);">Verifying slot reservation & connecting with payment gateway...</p>
       </div>
 
-      <!-- Tab Bar to switch between Card and UPI -->
+      <!-- Tab Bar to switch between UPI and Card -->
       <div *ngIf="!paymentProcessing" class="payment-tabs">
-        <button 
-          type="button" 
-          (click)="selectPaymentMethod('card')"
-          [class.active]="activePaymentMethod === 'card'"
-          class="payment-tab-btn">
-          💳 Card
-        </button>
         <button 
           type="button" 
           (click)="selectPaymentMethod('upi')"
           [class.active]="activePaymentMethod === 'upi'"
           class="payment-tab-btn">
           📱 UPI Pay
+        </button>
+        <button 
+          type="button" 
+          (click)="selectPaymentMethod('card')"
+          [class.active]="activePaymentMethod === 'card'"
+          class="payment-tab-btn">
+          💳 Card
         </button>
       </div>
 

@@ -66,7 +66,7 @@ export class BookingComponent implements OnInit, OnDestroy {
   paymentError = '';
 
   // UPI Payment Properties
-  activePaymentMethod: 'card' | 'upi' = 'card';
+  activePaymentMethod: 'card' | 'upi' = 'upi';
   upiId: string = '';
 
   // History list
@@ -300,7 +300,7 @@ export class BookingComponent implements OnInit, OnDestroy {
     this.paymentError = '';
     this.paymentProcessing = false;
     this.paymentData = { cardNumber: '', cardName: '', expiry: '', cvv: '' };
-    this.activePaymentMethod = 'card';
+    this.activePaymentMethod = 'upi';
     this.upiId = '';
   }
 
