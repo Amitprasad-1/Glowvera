@@ -23,47 +23,12 @@
 /* Logo Design */
 .logo {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
   text-decoration: none;
   font-family: var(--font-title);
   letter-spacing: 0.02em;
-  line-height: 1.1;
+  line-height: 1;
   position: relative;
-}
-
-.logo-img {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1.5px solid var(--gold-primary);
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.45);
-  transition: transform 0.3s ease;
-}
-
-.logo:hover .logo-img {
-  transform: scale(1.05) rotate(5deg);
-}
-
-.logo-img-sm {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid var(--gold-primary);
-}
-
-.logo-container-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.logo-text-wrapper {
-  display: flex;
-  flex-direction: column;
 }
 
 .logo .logo-main {
@@ -75,12 +40,17 @@
   gap: 6px;
 }
 
+.logo-sparkle {
+  color: var(--gold-primary);
+  display: inline-block;
+}
+
 .logo .sub-logo {
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 0.35em;
   color: var(--text-muted);
-  margin-top: 3px;
+  margin-top: 5px;
   text-transform: uppercase;
 }
 

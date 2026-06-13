@@ -1,13 +1,11 @@
 <header class="navbar glass">
   <div class="navbar-container container">
     <a routerLink="/home" class="logo" (click)="closeMobileMenu()">
-      <img src="/glowvera_hero.png" alt="Glowvera Logo" class="logo-img">
-      <div class="logo-text-wrapper">
-        <span class="logo-main">
-          <span class="gold-text">GLOW</span>VERA
-        </span>
-        <span class="sub-logo">LUXURY UNISEX SALON</span>
-      </div>
+      <span class="logo-main">
+        <span class="logo-sparkle">✨</span>
+        <span class="gold-text">GLOW</span>VERA
+      </span>
+      <span class="sub-logo">LUXURY UNISEX SALON</span>
     </a>
     <!-- Center: Main Navigation Links -->
     <nav class="nav-links-center">
@@ -47,10 +45,7 @@
   <div class="mobile-menu-overlay glass animate-fade-in" (click)="closeMobileMenu()">
     <nav class="mobile-nav-links" (click)="$event.stopPropagation()">
       <div class="mobile-drawer-header">
-        <div class="logo-container-row">
-          <img src="/glowvera_hero.png" alt="Glowvera Logo" class="logo-img-sm">
-          <span class="logo-main"><span class="gold-text">GLOW</span>VERA</span>
-        </div>
+        <span class="logo-main"><span class="gold-text">✨ GLOW</span>VERA</span>
         <button class="btn-close-drawer" (click)="closeMobileMenu()">&times;</button>
       </div>
       <div class="mobile-drawer-body">
@@ -89,10 +84,7 @@
   <div class="footer-container container">
     <div class="footer-divider"></div>
     <div class="footer-row">
-      <div class="logo-container-row">
-        <img src="/glowvera_hero.png" alt="Glowvera Logo" class="logo-img-sm">
-        <span class="footer-brand"><span class="gold-text">GLOW</span>VERA</span>
-      </div>
+      <span class="footer-brand"><span class="gold-text">GLOW</span>VERA</span>
       <p class="footer-copy">&copy; 2026 GLOWVERA. Confidence. Your Best Look. All Rights Reserved.</p>
       <span class="footer-tag">PREMIUM SCHEDULING PLATFORM</span>
     </div>
