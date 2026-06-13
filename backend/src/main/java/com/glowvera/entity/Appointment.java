@@ -38,9 +38,17 @@ public class Appointment {
     @Column(name = "payment_status")
     private String paymentStatus;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "appointment_services",
+        joinColumns = @JoinColumn(name = "appointment_id"),
+        inverseJoinColumns = @JoinColumn(name = "service_id")
+    )
+    private java.util.Set<Service> services = new java.util.HashSet<>();
+
     public Appointment() {}
 
-    public Appointment(Long id, User user, Stylist stylist, LocalDateTime startTime, LocalDateTime endTime, BigDecimal totalPrice, AppointmentStatus status, String paymentMethod, String paymentStatus) {
+    public Appointment(Long id, User user, Stylist stylist, LocalDateTime startTime, LocalDateTime endTime, BigDecimal totalPrice, AppointmentStatus status, String paymentMethod, String paymentStatus, java.util.Set<Service> services) {
         this.id = id;
         this.user = user;
         this.stylist = stylist;
@@ -50,6 +58,7 @@ public class Appointment {
         this.status = status;
         this.paymentMethod = paymentMethod;
         this.paymentStatus = paymentStatus;
+        this.services = services != null ? services : new java.util.HashSet<>();
     }
 
     public static AppointmentBuilder builder() {
@@ -75,6 +84,8 @@ public class Appointment {
     public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
     public String getPaymentStatus() { return paymentStatus; }
     public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+    public java.util.Set<Service> getServices() { return services; }
+    public void setServices(java.util.Set<Service> services) { this.services = services; }
 
     public static class AppointmentBuilder {
         private Long id;
@@ -86,6 +97,7 @@ public class Appointment {
         private AppointmentStatus status;
         private String paymentMethod;
         private String paymentStatus;
+        private java.util.Set<Service> services = new java.util.HashSet<>();
 
         public AppointmentBuilder id(Long id) { this.id = id; return this; }
         public AppointmentBuilder user(User user) { this.user = user; return this; }
@@ -96,8 +108,9 @@ public class Appointment {
         public AppointmentBuilder status(AppointmentStatus status) { this.status = status; return this; }
         public AppointmentBuilder paymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; return this; }
         public AppointmentBuilder paymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; return this; }
+        public AppointmentBuilder services(java.util.Set<Service> services) { this.services = services; return this; }
         public Appointment build() {
-            return new Appointment(id, user, stylist, startTime, endTime, totalPrice, status, paymentMethod, paymentStatus);
+            return new Appointment(id, user, stylist, startTime, endTime, totalPrice, status, paymentMethod, paymentStatus, services);
         }
     }
 }

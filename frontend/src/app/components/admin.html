@@ -87,6 +87,7 @@
         <div class="modal-body">
           <p><strong>Client:</strong> {{ selectedAppointment.user.name }} ({{ selectedAppointment.user.email }})</p>
           <p><strong>Stylist:</strong> {{ selectedAppointment.stylist.name }}</p>
+          <p><strong>Services:</strong> {{ getServicesSummary(selectedAppointment) }}</p>
           <p><strong>Scheduled Time:</strong> {{ formatDateTime(selectedAppointment.startTime) }} to {{ formatDateTime(selectedAppointment.endTime) }}</p>
           <p><strong>Total Pricing:</strong> <span class="gold-text">₹{{ selectedAppointment.totalPrice }}</span></p>
           <p>
@@ -369,6 +370,7 @@
                   <th>ID</th>
                   <th>Date & Time</th>
                   <th>Stylist</th>
+                  <th>Services</th>
                   <th>Price</th>
                   <th>Payment</th>
                   <th>Status</th>
@@ -380,6 +382,7 @@
                   <td>#{{ appt.id }}</td>
                   <td>{{ formatDateTime(appt.startTime) }}</td>
                   <td>{{ appt.stylist.name }}</td>
+                  <td>{{ getServicesSummary(appt) }}</td>
                   <td class="gold-text-bold">₹{{ appt.totalPrice }}</td>
                   <td>
                     <span style="display: block; font-size: 11px; font-weight: 600; color: var(--text-muted);">{{ appt.paymentMethod || 'PAY_AT_SALON' }}</span>
@@ -420,7 +423,7 @@
                   </td>
                 </tr>
                 <tr *ngIf="selectedClientAppointments.length === 0">
-                  <td colspan="7" class="text-center font-italic" style="padding: 24px; color: var(--text-muted);">
+                  <td colspan="8" class="text-center font-italic" style="padding: 24px; color: var(--text-muted);">
                     No booking records found for this client.
                   </td>
                 </tr>

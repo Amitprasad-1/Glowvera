@@ -170,6 +170,7 @@ public class AppointmentService {
                 .status(AppointmentStatus.CONFIRMED)
                 .paymentMethod(paymentMethod)
                 .paymentStatus(paymentStatus)
+                .services(new java.util.HashSet<>(services))
                 .build();
 
         Appointment saved = appointmentRepository.save(appointment);

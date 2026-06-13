@@ -21,17 +21,20 @@ public class DatabaseInitializer implements CommandLineRunner {
     private final ServiceRepository serviceRepository;
     private final StylistRepository stylistRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AppointmentRepository appointmentRepository;
 
     public DatabaseInitializer(UserRepository userRepository,
                                CategoryRepository categoryRepository,
                                ServiceRepository serviceRepository,
                                StylistRepository stylistRepository,
-                               PasswordEncoder passwordEncoder) {
+                               PasswordEncoder passwordEncoder,
+                               AppointmentRepository appointmentRepository) {
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.serviceRepository = serviceRepository;
         this.stylistRepository = stylistRepository;
         this.passwordEncoder = passwordEncoder;
+        this.appointmentRepository = appointmentRepository;
     }
 
     @Override
@@ -100,6 +103,95 @@ public class DatabaseInitializer implements CommandLineRunner {
         getOrCreateStylist("Shreya Sharma", LocalTime.of(10, 0), LocalTime.of(19, 0), LocalTime.of(14, 0), LocalTime.of(15, 0), s7, s8);
         getOrCreateStylist("Vikram Singh", LocalTime.of(9, 0), LocalTime.of(18, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), s1, s4, s5, s6);
         getOrCreateStylist("Pooja Patel", LocalTime.of(11, 0), LocalTime.of(20, 0), LocalTime.of(15, 0), LocalTime.of(16, 0), s9, s10, s7);
+
+        // 5. Seed Mock Client Appointments for History Search Audit
+        if (appointmentRepository.count() == 0) {
+            System.out.println("Seeding mock appointments...");
+            User client = userRepository.findByEmail("client@glowvera.com").orElse(null);
+            if (client != null) {
+                Stylist arjun = stylistRepository.findByName("Arjun Mehta").orElse(null);
+                Stylist shreya = stylistRepository.findByName("Shreya Sharma").orElse(null);
+                Stylist vikram = stylistRepository.findByName("Vikram Singh").orElse(null);
+                Stylist pooja = stylistRepository.findByName("Pooja Patel").orElse(null);
+
+                // 1. Past completed appointment (3 days ago)
+                if (vikram != null) {
+                    java.time.LocalDateTime start = java.time.LocalDateTime.now().minusDays(3).withHour(11).withMinute(0).withSecond(0).withNano(0);
+                    java.time.LocalDateTime end = start.plusMinutes(75);
+                    java.util.Set<Service> apptServices = new java.util.HashSet<>(java.util.Arrays.asList(s1, s5));
+                    Appointment app = Appointment.builder()
+                            .user(client)
+                            .stylist(vikram)
+                            .startTime(start)
+                            .endTime(end)
+                            .totalPrice(new BigDecimal("280.00"))
+                            .status(AppointmentStatus.COMPLETED)
+                            .paymentMethod("CARD")
+                            .paymentStatus("PAID")
+                            .services(apptServices)
+                            .build();
+                    appointmentRepository.save(app);
+                }
+
+                // 2. Past no-show appointment (2 days ago)
+                if (shreya != null) {
+                    java.time.LocalDateTime start = java.time.LocalDateTime.now().minusDays(2).withHour(15).withMinute(30).withSecond(0).withNano(0);
+                    java.time.LocalDateTime end = start.plusMinutes(60);
+                    java.util.Set<Service> apptServices = new java.util.HashSet<>(java.util.Arrays.asList(s7));
+                    Appointment app = Appointment.builder()
+                            .user(client)
+                            .stylist(shreya)
+                            .startTime(start)
+                            .endTime(end)
+                            .totalPrice(new BigDecimal("1800.00"))
+                            .status(AppointmentStatus.NO_SHOW)
+                            .paymentMethod("PAY_AT_SALON")
+                            .paymentStatus("UNPAID")
+                            .services(apptServices)
+                            .build();
+                    appointmentRepository.save(app);
+                }
+
+                // 3. Upcoming confirmed appointment (Tomorrow at 10:00 AM)
+                if (arjun != null) {
+                    java.time.LocalDateTime start = java.time.LocalDate.now().plusDays(1).atTime(10, 0);
+                    java.time.LocalDateTime end = start.plusMinutes(105);
+                    java.util.Set<Service> apptServices = new java.util.HashSet<>(java.util.Arrays.asList(s1, s2));
+                    Appointment app = Appointment.builder()
+                            .user(client)
+                            .stylist(arjun)
+                            .startTime(start)
+                            .endTime(end)
+                            .totalPrice(new BigDecimal("1200.00"))
+                            .status(AppointmentStatus.CONFIRMED)
+                            .paymentMethod("UPI")
+                            .paymentStatus("PAID")
+                            .services(apptServices)
+                            .build();
+                    appointmentRepository.save(app);
+                }
+
+                // 4. Upcoming confirmed appointment (Day after tomorrow at 3:00 PM)
+                if (pooja != null) {
+                    java.time.LocalDateTime start = java.time.LocalDate.now().plusDays(2).atTime(15, 0);
+                    java.time.LocalDateTime end = start.plusMinutes(45);
+                    java.util.Set<Service> apptServices = new java.util.HashSet<>(java.util.Arrays.asList(s9));
+                    Appointment app = Appointment.builder()
+                            .user(client)
+                            .stylist(pooja)
+                            .startTime(start)
+                            .endTime(end)
+                            .totalPrice(new BigDecimal("800.00"))
+                            .status(AppointmentStatus.CONFIRMED)
+                            .paymentMethod("PAY_AT_SALON")
+                            .paymentStatus("UNPAID")
+                            .services(apptServices)
+                            .build();
+                    appointmentRepository.save(app);
+                }
+                System.out.println("Seeded 4 mock appointments successfully.");
+            }
+        }
 
         System.out.println("Database Seeding Check Completed.");
     }

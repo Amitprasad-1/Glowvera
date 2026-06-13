@@ -495,4 +495,12 @@ export class BookingComponent implements OnInit, OnDestroy {
     };
     return images[name] || '';
   }
+
+  getServicesSummary(appt: any): string {
+    if (!appt) return '';
+    if (appt.services && appt.services.length > 0) {
+      return appt.services.map((s: any) => s.name).join(', ');
+    }
+    return appt.totalPrice ? `Booking (₹${appt.totalPrice})` : 'Booking';
+  }
 }

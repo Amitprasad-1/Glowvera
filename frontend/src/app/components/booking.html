@@ -47,6 +47,7 @@
         <div class="success-details">
           <p><strong>Appointment ID:</strong> <span class="gold-text">#{{ confirmedAppointment?.id }}</span></p>
           <p><strong>Stylist:</strong> {{ confirmedAppointment?.stylist?.name }}</p>
+          <p><strong>Services:</strong> {{ getServicesSummary(confirmedAppointment) }}</p>
           <p><strong>Time Slot:</strong> {{ formatDateTime(confirmedAppointment?.startTime) }}</p>
           <p><strong>Total Price:</strong> <span class="gold-text">₹{{ confirmedAppointment?.totalPrice }}</span></p>
         </div>
@@ -261,6 +262,7 @@
             <th>Date</th>
             <th>Time Slot</th>
             <th>Stylist</th>
+            <th>Services</th>
             <th>Price</th>
             <th>Status</th>
             <th>Actions</th>
@@ -272,6 +274,7 @@
             <td>{{ formatDateTime(b.startTime, 'dateOnly') }}</td>
             <td>{{ formatDateTime(b.startTime, 'timeOnly') }} - {{ formatDateTime(b.endTime, 'timeOnly') }}</td>
             <td>{{ b.stylist.name }}</td>
+            <td>{{ getServicesSummary(b) }}</td>
             <td class="gold-text-bold">₹{{ b.totalPrice }}</td>
             <td>
               <span class="badge" [class.badge-confirmed]="b.status === 'CONFIRMED'" [class.badge-pending]="b.status === 'PENDING'" [class.badge-cancelled]="b.status === 'CANCELLED'">
@@ -316,6 +319,10 @@
           <div class="detail-row">
             <span class="detail-label">Stylist:</span>
             <span class="detail-value">{{ b.stylist.name }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Services:</span>
+            <span class="detail-value">{{ getServicesSummary(b) }}</span>
           </div>
           <div class="detail-row">
             <span class="detail-label">Price:</span>
