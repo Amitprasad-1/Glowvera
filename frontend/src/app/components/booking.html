@@ -344,8 +344,26 @@
         <p style="font-size: 12px; color: var(--text-muted);">Verifying slot reservation & connecting with payment gateway...</p>
       </div>
 
+      <!-- Tab Bar to switch between Card and UPI -->
+      <div *ngIf="!paymentProcessing" class="payment-tabs">
+        <button 
+          type="button" 
+          (click)="selectPaymentMethod('card')"
+          [class.active]="activePaymentMethod === 'card'"
+          class="payment-tab-btn">
+          💳 Card
+        </button>
+        <button 
+          type="button" 
+          (click)="selectPaymentMethod('upi')"
+          [class.active]="activePaymentMethod === 'upi'"
+          class="payment-tab-btn">
+          📱 UPI Pay
+        </button>
+      </div>
+
       <!-- Credit Card Input Form -->
-      <form *ngIf="!paymentProcessing" (ngSubmit)="processSimulatedPayment()" class="modal-body animate-fade-in">
+      <form *ngIf="!paymentProcessing && activePaymentMethod === 'card'" (ngSubmit)="processSimulatedPayment()" class="modal-body animate-fade-in">
         <div class="total-summary-card">
           <span>Total Booking Price:</span>
           <span class="gold-text">₹{{ cartTotalPrice() }}</span>
@@ -412,6 +430,55 @@
           </button>
           <button type="submit" class="btn btn-primary btn-sm" style="border-radius: 20px; padding: 10px 20px;">
             Pay & Confirm
+          </button>
+        </div>
+      </form>
+
+      <!-- UPI Payment Form -->
+      <form *ngIf="!paymentProcessing && activePaymentMethod === 'upi'" (ngSubmit)="processSimulatedUpiPayment()" class="modal-body animate-fade-in upi-form">
+        <div class="total-summary-card">
+          <span>Total Booking Price:</span>
+          <span class="gold-text">₹{{ cartTotalPrice() }}</span>
+        </div>
+
+        <!-- Dynamic QR Code QR Server API -->
+        <div class="qr-code-container">
+          <img [src]="getQrCodeUrl()" alt="UPI QR Code" class="qr-code-img">
+          <span class="qr-instruction">
+            Scan this dynamic QR Code using any UPI App (BHIM, Google Pay, PhonePe, Paytm, etc.) to pay <strong>₹{{ cartTotalPrice() }}</strong>.
+          </span>
+        </div>
+
+        <!-- UPI Deep Link Anchor Redirect for mobile users -->
+        <a [href]="getUpiString()" class="upi-app-btn">
+          📱 Pay via UPI App
+        </a>
+
+        <div class="divider-or">OR PAY WITH UPI ID</div>
+
+        <div class="form-group">
+          <label class="form-label" style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block;">UPI ID / VPA</label>
+          <input 
+            type="text" 
+            name="upiId" 
+            [(ngModel)]="upiId" 
+            placeholder="username@upi" 
+            class="form-control" 
+            style="width: 100%;"
+            required>
+        </div>
+
+        <!-- Inline validation error message -->
+        <div *ngIf="paymentError" class="alert alert-error font-sm-alert animate-fade-in" style="margin-top: 16px; font-size: 12px;">
+          ⚠️ {{ paymentError }}
+        </div>
+
+        <div class="modal-actions" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+          <button type="button" (click)="showPaymentModal = false" class="btn btn-secondary btn-sm" style="border-radius: 20px; padding: 10px 20px;">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary btn-sm" style="border-radius: 20px; padding: 10px 20px;">
+            Verify & Pay
           </button>
         </div>
       </form>

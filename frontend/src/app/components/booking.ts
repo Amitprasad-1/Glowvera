@@ -62,6 +62,10 @@ export class BookingComponent implements OnInit, OnDestroy {
   paymentData = { cardNumber: '', cardName: '', expiry: '', cvv: '' };
   paymentError = '';
 
+  // UPI Payment Properties
+  activePaymentMethod: 'card' | 'upi' = 'card';
+  upiId: string = '';
+
   // History list
   myBookings: any[] = [];
 
@@ -293,6 +297,56 @@ export class BookingComponent implements OnInit, OnDestroy {
     this.paymentError = '';
     this.paymentProcessing = false;
     this.paymentData = { cardNumber: '', cardName: '', expiry: '', cvv: '' };
+    this.activePaymentMethod = 'card';
+    this.upiId = '';
+  }
+
+  selectPaymentMethod(method: 'card' | 'upi') {
+    this.activePaymentMethod = method;
+    this.paymentError = '';
+  }
+
+  getUpiString(): string {
+    const amount = this.cartTotalPrice();
+    return `upi://pay?pa=glowvera@upi&pn=Glowvera%20Salon&am=${amount}&cu=INR&tn=Glowvera%20Salon%20Booking`;
+  }
+
+  getQrCodeUrl(): string {
+    return `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(this.getUpiString())}`;
+  }
+
+  processSimulatedUpiPayment() {
+    if (!this.upiId.trim() || !this.upiId.includes('@')) {
+      this.paymentError = 'Please enter a valid UPI ID (e.g. name@upi or mobile@upi)';
+      return;
+    }
+    this.paymentProcessing = true;
+    this.paymentError = '';
+
+    // Simulate merchant checking transaction status on UPI gateway
+    setTimeout(() => {
+      this.bookingInProgress = true;
+      const serviceIds = this.cartServices().map(s => s.id);
+      
+      this.api.bookAppointment(this.selectedStylistId!, serviceIds, this.selectedSlot!).subscribe({
+        next: (appt) => {
+          this.bookingInProgress = false;
+          this.paymentProcessing = false;
+          this.showPaymentModal = false;
+          this.confirmedAppointment = appt;
+          this.bookingSuccess = true;
+          this.cart.clear();
+          this.clearHoldTimer();
+          this.isHoldActive = false;
+          this.loadMyBookings();
+        },
+        error: (err) => {
+          this.bookingInProgress = false;
+          this.paymentProcessing = false;
+          this.paymentError = err.error?.message || 'UPI transaction verification failed. Slot concurrency failure.';
+        }
+      });
+    }, 2000);
   }
 
   processSimulatedPayment() {
