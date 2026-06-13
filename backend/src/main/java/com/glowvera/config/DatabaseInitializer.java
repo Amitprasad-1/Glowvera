@@ -87,11 +87,19 @@ public class DatabaseInitializer implements CommandLineRunner {
         Service s9 = getOrCreateService(skinFacial, "Charcoal Deep Cleansing Facial", new BigDecimal("3800.00"), 45);
         Service s10 = getOrCreateService(skinFacial, "Luxury Anti-Aging Facial", new BigDecimal("5500.00"), 60);
 
+        // Deactivate old stylists not in the new active list
+        stylistRepository.findAll().forEach(s -> {
+            if (!java.util.Arrays.asList("Arjun Mehta", "Shreya Sharma", "Vikram Singh", "Pooja Patel").contains(s.getName())) {
+                s.setIsActive(false);
+                stylistRepository.save(s);
+            }
+        });
+
         // 4. Seed Stylists (Granular check per stylist name)
-        getOrCreateStylist("Alex Carter", LocalTime.of(9, 0), LocalTime.of(18, 0), LocalTime.of(13, 0), LocalTime.of(14, 0), s1, s2, s3, s4);
-        getOrCreateStylist("Sophia Bennett", LocalTime.of(10, 0), LocalTime.of(19, 0), LocalTime.of(14, 0), LocalTime.of(15, 0), s7, s8);
-        getOrCreateStylist("Marcus Vance", LocalTime.of(9, 0), LocalTime.of(18, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), s1, s4, s5, s6);
-        getOrCreateStylist("Elena Rostova", LocalTime.of(11, 0), LocalTime.of(20, 0), LocalTime.of(15, 0), LocalTime.of(16, 0), s9, s10, s7);
+        getOrCreateStylist("Arjun Mehta", LocalTime.of(9, 0), LocalTime.of(18, 0), LocalTime.of(13, 0), LocalTime.of(14, 0), s1, s2, s3, s4);
+        getOrCreateStylist("Shreya Sharma", LocalTime.of(10, 0), LocalTime.of(19, 0), LocalTime.of(14, 0), LocalTime.of(15, 0), s7, s8);
+        getOrCreateStylist("Vikram Singh", LocalTime.of(9, 0), LocalTime.of(18, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), s1, s4, s5, s6);
+        getOrCreateStylist("Pooja Patel", LocalTime.of(11, 0), LocalTime.of(20, 0), LocalTime.of(15, 0), LocalTime.of(16, 0), s9, s10, s7);
 
         System.out.println("Database Seeding Check Completed.");
     }
