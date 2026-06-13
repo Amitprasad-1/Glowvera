@@ -59,6 +59,12 @@ export class AdminComponent implements OnInit {
   triggeringReminders = false;
   reminderResult: any = null;
 
+  // Desk checkout search variables
+  checkoutSearchId: string = '';
+  checkoutAppt: any = null;
+  checkoutError: string = '';
+  checkoutSearching: boolean = false;
+
   ngOnInit() {
     const today = new Date();
     const year = today.getFullYear();
@@ -462,5 +468,57 @@ export class AdminComponent implements OnInit {
     const d = new Date(dateTimeString);
     if (isNaN(d.getTime())) return dateTimeString;
     return d.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  }
+
+  searchCheckoutAppointment() {
+    this.checkoutError = '';
+    this.checkoutAppt = null;
+    if (!this.checkoutSearchId) return;
+    const id = parseInt(this.checkoutSearchId.trim(), 10);
+    if (isNaN(id)) {
+      this.checkoutError = 'Please enter a valid numeric Appointment ID.';
+      return;
+    }
+    this.checkoutSearching = true;
+    this.api.getAppointmentById(id).subscribe({
+      next: (appt) => {
+        this.checkoutAppt = appt;
+        this.checkoutSearching = false;
+      },
+      error: (err) => {
+        this.checkoutError = 'Appointment not found. Please verify the ID.';
+        this.checkoutSearching = false;
+      }
+    });
+  }
+
+  updateCheckoutStatus(id: number, status: string) {
+    if (confirm(`Are you sure you want to mark this checkout booking as ${status}?`)) {
+      this.api.updateAppointmentStatus(id, status).subscribe({
+        next: (updatedAppt) => {
+          this.checkoutAppt = updatedAppt;
+          this.loadTimelineData();
+          this.loadClients();
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
+  }
+
+  cancelCheckoutAppointment(id: number) {
+    if (confirm('Are you sure you want to cancel this booking?')) {
+      this.api.cancelAppointment(id).subscribe({
+        next: () => {
+          this.searchCheckoutAppointment();
+          this.loadTimelineData();
+          this.loadClients();
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
   }
 }

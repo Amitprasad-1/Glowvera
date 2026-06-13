@@ -1,6 +1,105 @@
 <div class="admin-container container animate-fade-in">
   <h2 class="admin-title title-with-gold"><span class="gold-text">Admin</span> Operations Panel</h2>
 
+  <!-- Quick Desk Checkout Search Bar -->
+  <div class="checkout-search-card card" style="margin-bottom: 24px; border: 1px solid rgba(245, 158, 11, 0.2); background: rgba(18, 18, 25, 0.95); box-shadow: var(--shadow-dark);">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <h4 style="font-family: var(--font-title); font-size: 16px; margin: 0; display: flex; align-items: center; gap: 8px; font-weight: 700;">
+          🔑 <span class="gold-text">Desk Checkout Lookup</span>
+        </h4>
+        <p style="font-size: 12px; color: var(--text-muted); margin: 4px 0 0 0;">Enter Client's Appointment ID to verify billing and check them out.</p>
+      </div>
+      <form (ngSubmit)="searchCheckoutAppointment()" style="display: flex; gap: 8px; flex-grow: 1; max-width: 450px;">
+        <input 
+          type="text" 
+          [(ngModel)]="checkoutSearchId" 
+          name="checkoutSearchId" 
+          placeholder="Enter Appointment ID (e.g. 3)" 
+          class="form-control" 
+          style="height: 42px; font-size: 14px; padding: 6px 14px; background: rgba(4, 4, 6, 0.6);" 
+          required>
+        <button type="submit" class="btn btn-primary btn-sm" style="height: 42px; border-radius: 10px; font-weight: 700; white-space: nowrap;">
+          🔍 Search
+        </button>
+      </form>
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="checkoutError" class="alert alert-error font-sm-alert animate-fade-in" style="margin-top: 16px; margin-bottom: 0; padding: 10px 14px; font-size: 13px; display: flex; align-items: center; justify-content: space-between;">
+      <span>⚠️ {{ checkoutError }}</span>
+      <button type="button" (click)="checkoutError = ''" style="background: transparent; border: none; color: inherit; cursor: pointer; font-weight: bold; font-size: 16px;">&times;</button>
+    </div>
+
+    <!-- Checkout Details Card (if found) -->
+    <div *ngIf="checkoutAppt" class="checkout-details-tray glass animate-fade-up" style="margin-top: 20px; padding: 20px; border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.15); background: rgba(255, 255, 255, 0.01);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <h5 style="margin: 0; font-size: 16px; font-family: var(--font-title); font-weight: 700;">
+            Booking <span class="gold-text">#{{ checkoutAppt.id }}</span> &bull; {{ checkoutAppt.user.name }}
+          </h5>
+          <p style="font-size: 12px; color: var(--text-muted); margin: 4px 0 12px 0;">{{ checkoutAppt.user.email }}</p>
+          
+          <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px;">
+            <div><strong>Stylist:</strong> {{ checkoutAppt.stylist.name }}</div>
+            <div><strong>Scheduled Time:</strong> {{ formatDateTime(checkoutAppt.startTime) }}</div>
+            <div><strong>Services:</strong> {{ getServicesSummary(checkoutAppt) }}</div>
+          </div>
+        </div>
+
+        <div style="text-align: right; min-width: 180px;">
+          <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 2px;">Total Bill Amount</div>
+          <div style="font-size: 26px; font-weight: 800; font-family: var(--font-title); color: var(--gold-primary); line-height: 1;">
+            ₹{{ checkoutAppt.totalPrice }}
+          </div>
+          
+          <div style="margin-top: 10px; display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+            <div>
+              <span style="font-size: 10px; color: var(--text-muted); margin-right: 6px; font-weight: 600;">{{ checkoutAppt.paymentMethod || 'PAY_AT_SALON' }}</span>
+              <span class="badge" [class.badge-paid]="checkoutAppt.paymentStatus === 'PAID'" [class.badge-unpaid]="checkoutAppt.paymentStatus !== 'PAID'">
+                {{ checkoutAppt.paymentStatus || 'UNPAID' }}
+              </span>
+            </div>
+            <div>
+              <span class="badge" 
+                    [class.badge-confirmed]="checkoutAppt.status === 'CONFIRMED'" 
+                    [class.badge-completed]="checkoutAppt.status === 'COMPLETED'" 
+                    [class.badge-noshow]="checkoutAppt.status === 'NO_SHOW'" 
+                    [class.badge-cancelled]="checkoutAppt.status === 'CANCELLED'">
+                {{ checkoutAppt.status }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Panel inside lookup -->
+      <div style="display: flex; gap: 8px; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 16px; flex-wrap: wrap;">
+        <ng-container *ngIf="checkoutAppt.status === 'CONFIRMED'">
+          <button (click)="updateCheckoutStatus(checkoutAppt.id, 'COMPLETED')" class="btn btn-primary btn-sm" style="background: var(--success-color); color: white; border-radius: 8px; box-shadow: none;">
+            ✓ Came (Complete Checkout)
+          </button>
+          <button (click)="updateCheckoutStatus(checkoutAppt.id, 'NO_SHOW')" class="btn btn-primary btn-sm" style="background: #e11d48; color: white; border-radius: 8px; box-shadow: none;">
+            ✗ Mark No-Show
+          </button>
+          <button (click)="cancelCheckoutAppointment(checkoutAppt.id)" class="btn btn-danger btn-sm" style="border-radius: 8px;">
+            Cancel Appointment
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="checkoutAppt.status === 'CANCELLED' || checkoutAppt.status === 'NO_SHOW' || checkoutAppt.status === 'COMPLETED'">
+          <button (click)="updateCheckoutStatus(checkoutAppt.id, 'CONFIRMED')" class="btn btn-secondary btn-sm" style="border-radius: 8px;">
+            Revert to Confirmed
+          </button>
+        </ng-container>
+
+        <button (click)="checkoutAppt = null; checkoutSearchId = ''" class="btn btn-secondary btn-sm" style="margin-left: auto; border-radius: 8px;">
+          Close Card
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Top Tab Selector -->
   <div class="admin-tabs-row">
     <button (click)="activeTab = 'timeline'" [class.active]="activeTab === 'timeline'" class="admin-tab-btn">

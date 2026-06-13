@@ -103,6 +103,14 @@ public class AppointmentController {
         return ResponseEntity.ok(appt);
     }
 
+    // Client/Admin: Fetch single appointment by ID
+    @GetMapping("/appointments/{id}")
+    public ResponseEntity<Appointment> getAppointmentById(@PathVariable Long id) {
+        Appointment appt = appointmentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Appointment not found"));
+        return ResponseEntity.ok(appt);
+    }
+
     // Client: Fetch current client's bookings
     @GetMapping("/appointments/my")
     public ResponseEntity<List<Appointment>> getMyAppointments(@AuthenticationPrincipal String email) {

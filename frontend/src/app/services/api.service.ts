@@ -120,6 +120,10 @@ export class ApiService {
     return this.http.put<any>(`${this.baseUrl}/admin/appointments/${id}/status`, {}, { headers: this.getHeaders(), params });
   }
 
+  getAppointmentById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/appointments/${id}`, { headers: this.getHeaders() });
+  }
+
   getMyAppointments(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/appointments/my`, { headers: this.getHeaders() });
   }
