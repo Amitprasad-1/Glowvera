@@ -107,4 +107,14 @@ export class HomeComponent implements OnInit {
       return timeString;
     }
   }
+
+  getStylistImage(name: string): string {
+    const images: { [key: string]: string } = {
+      'Alex Carter': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+      'Sophia Bennett': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+      'Marcus Vance': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+      'Elena Rostova': 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+    };
+    return images[name] || '';
+  }
 }

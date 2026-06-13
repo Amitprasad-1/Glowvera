@@ -30,7 +30,7 @@
         <div class="hero-image-frame">
           <div class="hero-glow-ring"></div>
           <div class="hero-image-wrapper">
-            <img src="/glowvera_logo.png" alt="Glowvera Unisex Salon Logo" class="hero-main-img">
+            <img src="/glowvera_hero.png" alt="Glowvera Unisex Salon Showcase" class="hero-main-img">
           </div>
         </div>
       </div>
@@ -151,7 +151,8 @@
         <div class="stylist-avatar-container">
           <div class="avatar-ring-glow"></div>
           <div class="stylist-avatar">
-            <div class="avatar-placeholder">{{ stylist.name.charAt(0) }}</div>
+            <img *ngIf="getStylistImage(stylist.name)" [src]="getStylistImage(stylist.name)" [alt]="stylist.name" class="stylist-img">
+            <div *ngIf="!getStylistImage(stylist.name)" class="avatar-placeholder">{{ stylist.name.charAt(0) }}</div>
           </div>
         </div>
         <h3 class="stylist-name">{{ stylist.name }}</h3>

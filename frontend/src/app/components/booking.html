@@ -137,7 +137,10 @@
                   (click)="selectStylist(s.id)"
                   [class.active]="selectedStylistId === s.id"
                   class="stylist-picker-card scroll-x-item card">
-                  <div class="picker-avatar">{{ s.name.charAt(0) }}</div>
+                  <div class="picker-avatar">
+                    <img *ngIf="getStylistImage(s.name)" [src]="getStylistImage(s.name)" [alt]="s.name" class="stylist-img">
+                    <span *ngIf="!getStylistImage(s.name)">{{ s.name.charAt(0) }}</span>
+                  </div>
                   <div class="picker-details">
                     <span class="picker-name">{{ s.name }}</span>
                     <span class="picker-shift">Shift: {{ formatTime(s.workingStart) }} - {{ formatTime(s.workingEnd) }}</span>
