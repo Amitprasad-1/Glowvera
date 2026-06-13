@@ -1,12 +1,17 @@
-const CACHE_NAME = 'glowvera-cache-v2';
+const CACHE_NAME = 'glowvera-cache-v3';
 const STATIC_ASSETS = [
   '/manifest.json',
   '/glowvera_logo.png',
+  '/glowvera_hero.png',
   '/cat_hair.png',
   '/cat_grooming.png',
   '/cat_skin.png',
   '/cat_spa.png',
-  '/favicon.ico'
+  '/favicon.ico',
+  '/stylist_arjun.png',
+  '/stylist_shreya.png',
+  '/stylist_vikram.png',
+  '/stylist_pooja.png'
 ];
 
 self.addEventListener('install', event => {
