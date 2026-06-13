@@ -239,6 +239,50 @@
   transform: translateY(-2px);
 }
 
+.booking-block.status-completed {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+.booking-block.status-completed::before {
+  background: var(--success-color, #10b981);
+}
+.booking-block.status-completed:hover {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: var(--success-color, #10b981);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
+}
+
+.booking-block.status-noshow {
+  background: rgba(244, 63, 94, 0.06);
+  border-color: rgba(244, 63, 94, 0.3);
+  opacity: 0.75;
+}
+.booking-block.status-noshow::before {
+  background: #f43f5e;
+}
+.booking-block.status-noshow:hover {
+  background: rgba(244, 63, 94, 0.1);
+  border-color: #f43f5e;
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.2);
+}
+
+.booking-block.status-cancelled {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.1);
+  opacity: 0.5;
+}
+.booking-block.status-cancelled::before {
+  background: #9ca3af;
+}
+.booking-block.status-cancelled .booking-client {
+  text-decoration: line-through;
+  color: var(--text-muted) !important;
+}
+.booking-block.status-cancelled:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
 .booking-client {
   font-weight: 700;
   font-size: 13px;
@@ -276,12 +320,39 @@
 }
 
 .modal-card {
+  position: relative;
   width: 100%;
   max-width: 500px;
   padding: 36px;
   border-radius: 20px;
   box-shadow: var(--shadow-dark), 0 0 35px rgba(0, 0, 0, 0.6);
   border: 1px solid var(--glass-border);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 28px;
+  cursor: pointer;
+  line-height: 1;
+  transition: all 0.3s ease;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.modal-close-btn:hover {
+  color: var(--gold-primary);
+  background: rgba(255, 255, 255, 0.05);
+  transform: rotate(90deg);
 }
 .modal-card h3 {
   font-size: 24px;

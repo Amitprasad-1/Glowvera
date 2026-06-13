@@ -166,8 +166,19 @@
             <!-- Display active appointments overlapping this hour -->
             <div *ngFor="let appt of getAppointmentsForHour(s.id, hour)" 
                  (click)="onViewAppointment(appt)"
-                 class="cell-block booking-block animate-fade-in">
-              <span class="booking-client">{{ appt.user.name }}</span>
+                 class="cell-block booking-block animate-fade-in"
+                 [class.status-completed]="appt.status === 'COMPLETED'"
+                 [class.status-noshow]="appt.status === 'NO_SHOW'"
+                 [class.status-cancelled]="appt.status === 'CANCELLED'">
+              <span class="booking-client" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <span>{{ appt.user.name }}</span>
+                <span *ngIf="appt.status !== 'CONFIRMED'" 
+                      style="font-size: 8px; padding: 2px 4px; border-radius: 4px; font-weight: 800; text-transform: uppercase;"
+                      [style.background-color]="appt.status === 'COMPLETED' ? 'rgba(16, 185, 129, 0.2)' : appt.status === 'NO_SHOW' ? 'rgba(244, 63, 94, 0.2)' : 'rgba(255, 255, 255, 0.1)'"
+                      [style.color]="appt.status === 'COMPLETED' ? '#10b981' : appt.status === 'NO_SHOW' ? '#f43f5e' : '#9ca3af'">
+                  {{ appt.status === 'NO_SHOW' ? 'NO-SHOW' : appt.status }}
+                </span>
+              </span>
               <span class="booking-service">{{ getServicesSummary(appt) }}</span>
               <span class="booking-time">{{ formatTimeOnly(appt.startTime) }} - {{ formatTimeOnly(appt.endTime) }}</span>
             </div>
