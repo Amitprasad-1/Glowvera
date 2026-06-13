@@ -170,6 +170,13 @@
                  [class.status-completed]="appt.status === 'COMPLETED'"
                  [class.status-noshow]="appt.status === 'NO_SHOW'"
                  [class.status-cancelled]="appt.status === 'CANCELLED'">
+              <span class="status-dot" 
+                    [class.dot-completed]="appt.status === 'COMPLETED'" 
+                    [class.dot-noshow]="appt.status === 'NO_SHOW'" 
+                    [class.dot-confirmed]="appt.status === 'CONFIRMED'" 
+                    [class.dot-cancelled]="appt.status === 'CANCELLED'"
+                    [title]="'Status: ' + appt.status">
+              </span>
               <span class="booking-client" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                 <span>{{ appt.user.name }}</span>
                 <span *ngIf="appt.status !== 'CONFIRMED'" 
